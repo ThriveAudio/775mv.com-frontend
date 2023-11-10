@@ -1,4 +1,4 @@
-import CartPage from "./page_client"
+import PageCheckout from "./page_client"
 import { cookies } from 'next/headers'
 const fs = require('fs');
 // import { Server } from "socket.io";
@@ -24,6 +24,6 @@ export default async function PageCart() {
 
 
   return (
-    <CartPage initialItems={items}/>
+    <PageCheckout cart={items}/>
   )
 }

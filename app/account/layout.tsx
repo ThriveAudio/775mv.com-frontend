@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
 
+
+  // TODO change account navigation to cart navigation
   const links = [
     {'route': '/account/cart', 'name': 'Cart'},
     {'route': '/account/orders', 'name': 'Orders'},
@@ -24,7 +26,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
       <div className="flex flex-col w-[150px] h-fit mt-[50px]">
         {linkComponents}
       </div>
-      <div className="mt-[50px] flex flex-col border-2 h-[800px] w-[1000px] border-coolgraylight bg-coolgraydark rounded-lg">
+      <div className="relative mt-[50px] flex flex-col border-2 h-[800px] w-[1000px] border-coolgraylight bg-coolgraydark rounded-lg text-amber">
         {children}
       </div>
     </div>
