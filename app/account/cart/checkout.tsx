@@ -8,6 +8,7 @@ import { cartAtom } from './../../../utils/atoms'
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { CheckIcon, CheckboxIcon } from '@radix-ui/react-icons';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import RightChevron from "./../../../public/right_chevron.png"
 // import { HostedForm } from 'react-acceptjs';
 import GooglePayButton from "@google-pay/button-react";
 // import { io } from "socket.io-client"
@@ -333,6 +334,16 @@ function checkoutReducer(items, action) {
          }
       }
     }
+
+    case "expanded": {
+      return {
+      ...items,
+        expanded: {
+          ...items.expanded,
+          [action.field]: action.value
+        }
+      }
+    }
   
     default:
       break;
@@ -538,6 +549,15 @@ export default function Checkout() {
     })
   }
 
+  function handleExpansion(str) {
+    console.log("Exp")
+    dispatch({
+      type: 'expanded',
+      field: str,
+      value:!items.expanded[str]
+    })
+  }
+
   function createOrder() {
 
   }
@@ -552,18 +572,44 @@ export default function Checkout() {
         {/* <div className="relative flex flex-row min-h-[84px] text-amber border-2 border-coolgraylight bg-coolgraymid rounded-lg m-2 items-center overflow-hidden">
           
         </div> */}
-        <div className="flex flex-col h-[55px] overflow-hidden border-2 rounded-lg">
-          <p className="mx-auto m-2 font-bold text-2xl">Shipping Details</p>
-          <input ref={refs.shipping["first name"]} onInput={() => {handleShippingInput("first name")}} value={items.shipping['first name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping["last name"]} onInput={() => {handleShippingInput("last name")}} value={items.shipping['last name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.email} onInput={() => {handleShippingInput("email")}} value={items.shipping['email']} placeholder="Email" autoComplete="email" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.address1} onInput={() => {handleShippingInput("address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
-          <input ref={refs.shipping.address2} onInput={() => {handleShippingInput("address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.city} onInput={() => {handleShippingInput("city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.zip} onInput={() => {handleShippingInput("zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.state} onInput={() => {handleShippingInput("state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.country} onInput={() => {handleShippingInput("country")}} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-        </div>
+        {
+          items.expanded.shipping ?
+          <div className="transition-all m-2 flex flex-col h-[520px] border-coolgraylight border-2 rounded-lg">
+            <button onClick={() => {handleExpansion("shipping")}} className="relative flex">
+              {/* <Image src={RightChevron} width={20} height={20} alt="right chevron" className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-90"/> */}
+              <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-90">
+                <div className="relative w-[20px] h-[20px]">
+                  <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
+                  <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
+                </div>
+              </div>
+              <p className="mx-auto m-2 font-bold text-2xl">Shipping Details</p>
+            </button>
+            <input ref={refs.shipping["first name"]} onInput={() => {handleShippingInput("first name")}} value={items.shipping['first name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.shipping["last name"]} onInput={() => {handleShippingInput("last name")}} value={items.shipping['last name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.shipping.email} onInput={() => {handleShippingInput("email")}} value={items.shipping['email']} placeholder="Email" autoComplete="email" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.shipping.address1} onInput={() => {handleShippingInput("address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
+            <input ref={refs.shipping.address2} onInput={() => {handleShippingInput("address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.shipping.city} onInput={() => {handleShippingInput("city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.shipping.zip} onInput={() => {handleShippingInput("zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.shipping.state} onInput={() => {handleShippingInput("state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.shipping.country} onInput={() => {handleShippingInput("country")}} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          </div>
+          :
+          <div className="transition-all m-2 flex flex-col h-[55px] border-coolgraylight border-2 rounded-lg">
+            <button onClick={() => {handleExpansion("shipping")}} className="relative flex">
+            {/* <Image src={RightChevron} width={20} height={20} alt="right chevron" className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-0"/> */}
+              <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-0">
+                <div className="relative w-[20px] h-[20px]">
+                  <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
+                  <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
+                </div>
+              </div>
+              <p className="mx-auto m-2 font-bold text-2xl">Shipping Details</p>
+            </button>
+          </div>
+        }
+        
         <p className="mx-auto m-2 font-bold text-2xl">Billing Details</p>
         <div className="m-2">
           <input onClick={handleBillingCheck} type="checkbox" checked={items.billing['same as shipping']}/>
