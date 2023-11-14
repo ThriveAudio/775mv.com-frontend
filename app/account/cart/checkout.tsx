@@ -351,6 +351,40 @@ function checkoutReducer(items, action) {
   return items
 }
 
+function Expandable({children, title, expanded, handleExpansion, expansionType}) {
+  if (expanded) {
+    return (
+      <div className="transition-all ease-in duration-150 m-2 flex flex-col max-h-[600px] border-coolgraylight border-2 rounded-lg overflow-hidden">
+        <button onClick={() => handleExpansion(expansionType)} className="relative flex">
+          <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-90">
+            <div className="relative w-[20px] h-[20px]">
+              <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
+              <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
+            </div>
+          </div>
+          <p className="mx-auto m-2 font-bold text-2xl">{title}</p>
+        </button>
+        {children}
+      </div>
+    )
+  } else {
+    return (
+      <div className="transition-all ease-out duration-150 m-2 flex flex-col max-h-[55px] border-coolgraylight border-2 rounded-lg overflow-hidden">
+        <button onClick={() => handleExpansion(expansionType)} className="relative flex">
+          <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-0">
+            <div className="relative w-[20px] h-[20px]">
+              <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
+              <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
+            </div>
+          </div>
+          <p className="mx-auto m-2 font-bold text-2xl">{title}</p>
+        </button>
+        {children}
+      </div>
+    )
+  }
+}
+
 export default function Checkout() {
 
   const initialItems = {
@@ -386,7 +420,8 @@ export default function Checkout() {
     "expanded": {
       "shipping": false,
       "billing": false,
-      "payment": false
+      "payment": false,
+      "shipping method": false
     }
   }
 
@@ -572,112 +607,97 @@ export default function Checkout() {
         {/* <div className="relative flex flex-row min-h-[84px] text-amber border-2 border-coolgraylight bg-coolgraymid rounded-lg m-2 items-center overflow-hidden">
           
         </div> */}
-        {
-          items.expanded.shipping ?
-          <div className="transition-all m-2 flex flex-col h-[520px] border-coolgraylight border-2 rounded-lg">
-            <button onClick={() => {handleExpansion("shipping")}} className="relative flex">
-              {/* <Image src={RightChevron} width={20} height={20} alt="right chevron" className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-90"/> */}
-              <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-90">
-                <div className="relative w-[20px] h-[20px]">
-                  <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
-                  <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
-                </div>
-              </div>
-              <p className="mx-auto m-2 font-bold text-2xl">Shipping Details</p>
-            </button>
-            <input ref={refs.shipping["first name"]} onInput={() => {handleShippingInput("first name")}} value={items.shipping['first name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={refs.shipping["last name"]} onInput={() => {handleShippingInput("last name")}} value={items.shipping['last name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={refs.shipping.email} onInput={() => {handleShippingInput("email")}} value={items.shipping['email']} placeholder="Email" autoComplete="email" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={refs.shipping.address1} onInput={() => {handleShippingInput("address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
-            <input ref={refs.shipping.address2} onInput={() => {handleShippingInput("address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={refs.shipping.city} onInput={() => {handleShippingInput("city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={refs.shipping.zip} onInput={() => {handleShippingInput("zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={refs.shipping.state} onInput={() => {handleShippingInput("state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={refs.shipping.country} onInput={() => {handleShippingInput("country")}} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          </div>
-          :
-          <div className="transition-all m-2 flex flex-col h-[55px] border-coolgraylight border-2 rounded-lg">
-            <button onClick={() => {handleExpansion("shipping")}} className="relative flex">
-            {/* <Image src={RightChevron} width={20} height={20} alt="right chevron" className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-0"/> */}
-              <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-0">
-                <div className="relative w-[20px] h-[20px]">
-                  <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
-                  <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
-                </div>
-              </div>
-              <p className="mx-auto m-2 font-bold text-2xl">Shipping Details</p>
-            </button>
-          </div>
-        }
+
+        {/* SHIPPING */}
+        <Expandable title="Shipping Details" expanded={items.expanded.shipping} handleExpansion={handleExpansion} expansionType="shipping">
+          <input ref={refs.shipping["first name"]} onInput={() => {handleShippingInput("first name")}} value={items.shipping['first name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping["last name"]} onInput={() => {handleShippingInput("last name")}} value={items.shipping['last name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.email} onInput={() => {handleShippingInput("email")}} value={items.shipping['email']} placeholder="Email" autoComplete="email" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.address1} onInput={() => {handleShippingInput("address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
+          <input ref={refs.shipping.address2} onInput={() => {handleShippingInput("address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.city} onInput={() => {handleShippingInput("city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.zip} onInput={() => {handleShippingInput("zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.state} onInput={() => {handleShippingInput("state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.country} onInput={() => {handleShippingInput("country")}} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+        </Expandable>
         
-        <p className="mx-auto m-2 font-bold text-2xl">Billing Details</p>
-        <div className="m-2">
-          <input onClick={handleBillingCheck} type="checkbox" checked={items.billing['same as shipping']}/>
-          <label className="ml-2">Same as shipping address</label>
-        </div>
-        {
-          !items.billing['same as shipping'] ? 
-          <>
-          <input ref={refs.billing["first name"]} onInput={() => {handleBillingInput("first name")}} value={items.billing['first name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.billing["last name"]} onInput={() => {handleBillingInput("last name")}} value={items.billing['last name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.billing.address1} onInput={() => {handleBillingInput("address1")}} value={items.billing['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
-          <input ref={refs.billing.address2} onInput={() => {handleBillingInput("address2")}} value={items.billing['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.billing.city} onInput={() => {handleBillingInput("city")}} value={items.billing['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.billing.zip} onInput={() => {handleBillingInput("zip")}} value={items.billing['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.billing.state} onInput={() => {handleBillingInput("state")}} value={items.billing['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.billing.country} onInput={() => {handleBillingInput("country")}} value={items.billing['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          </>
-          :
-          <></>
-        }
 
-        <p className="mx-auto m-2 font-bold text-2xl">
-          Shipping Method
-        </p>
-        <p className="m-2">USA flat rate: $8.50</p>
+        {/* BILLING DETAILS */}
+        <Expandable title="Billing Details" expanded={items.expanded.billing} handleExpansion={handleExpansion} expansionType="billing">
+          <div className="m-2">
+            <input onClick={handleBillingCheck} type="checkbox" checked={items.billing['same as shipping']}/>
+            <label className="ml-2">Same as shipping address</label>
+          </div>
+          {
+            !items.billing['same as shipping'] ? 
+            <>
+            <input ref={refs.billing["first name"]} onInput={() => {handleBillingInput("first name")}} value={items.billing['first name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.billing["last name"]} onInput={() => {handleBillingInput("last name")}} value={items.billing['last name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.billing.address1} onInput={() => {handleBillingInput("address1")}} value={items.billing['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
+            <input ref={refs.billing.address2} onInput={() => {handleBillingInput("address2")}} value={items.billing['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.billing.city} onInput={() => {handleBillingInput("city")}} value={items.billing['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.billing.zip} onInput={() => {handleBillingInput("zip")}} value={items.billing['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.billing.state} onInput={() => {handleBillingInput("state")}} value={items.billing['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.billing.country} onInput={() => {handleBillingInput("country")}} value={items.billing['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            </>
+            :
+            <></>
+          }
+        </Expandable>
 
-        <p className="mx-auto m-2 font-bold text-2xl">
-          Payment Method
-        </p>
-        <div className="m-2 flex flex-col">
-          <div className="flex flex-row">
-            <input onClick={handleSwitchToCredit} type="radio" id="credit" name="payment-type" checked={items.payment.type=="credit"} />
-            <label htmlFor="credit">Credit/Debit Card</label>
-          </div>
-          <div className="flex flex-row">
-            <input onClick={handleSwitchToPaypal} type="radio" id="paypall" name="payment-type" checked={items.payment.type=="paypall"} />
-            <label htmlFor="paypall">PayPal</label>
-          </div>
-          {/* <div className="flex flex-row">
-            <input ref={paymentMethods[2]} onClick={() => handleSwitchPaymentMethod(paymentMethods[2])} type="radio" id="google" name="payment-type" checked={paymentMethod=="google"} />
-            <label htmlFor="google">Google</label>
-          </div> */}
-        </div>
-        {
-          items.payment.type == "credit" ?
-          <>
-            <input ref={cardNumberRef} onInput={() => handleCardNumberInput(cardNumberRef)} value={items.payment['cc-number']} placeholder="XXXX XXXX XXXX XXXX (Card Number)" autoComplete="cc-number" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={cardExpRef} onInput={() => {handleCardExpInput(cardExpRef)}} value={items.payment['cc-exp']} placeholder="MM/YY (Exp Date)" autoComplete="cc-date" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={cardCVVRef} onInput={() => {handleCardCVVInput(cardCVVRef)}} value={items.payment['cc-cvv']}  placeholder="XXX (CVV/CSC)" autoComplete="cc-csc" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <div className="flex text-amber m-2 border-2 rounded-lg border-coolgraylight h-[64px]">
-              {
-                items.payment.type == "credit" ?
-                <div className=" h-full relative">
-                  <button className="m-2 border-2 border-ochre rounded-lg bg-amber p-2 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">Place Order</button>
-                </div>
-                :
-                <></>
-              }
+
+
+        {/* SHIPPING METHOD */}
+        <Expandable title="Shipping Method" expanded={items.expanded["shipping method"]} handleExpansion={handleExpansion} expansionType="shipping method">
+          <p className="m-2">USA flat rate: $8.50</p>
+        </Expandable>
+        
+
+
+        {/* PAYMENT */}
+        <Expandable title="Payment Method" expanded={items.expanded.payment} handleExpansion={handleExpansion} expansionType="payment">
+          <div className="m-2 flex flex-col">
+            <div className="flex flex-row">
+              <input onClick={handleSwitchToCredit} type="radio" id="credit" name="payment-type" checked={items.payment.type=="credit"} />
+              <label htmlFor="credit">Credit/Debit Card</label>
             </div>
-          </>
-          :
-          <div className="relative mx-auto m-2 w-[500px]">
-            <span className="absolute w-[125px] h-[25px] bg-lightbg bottom-3.5 left-1/2 -translate-x-1/2 rounded"/>
-            <PayPalScriptProvider options={{clientId: "test", components: 'buttons'}}>
-              <PayPalButtons style={{layout: "vertical"}} createOrder={createOrder} onApprove={onApprove}/>
-            </PayPalScriptProvider>
+            <div className="flex flex-row">
+              <input onClick={handleSwitchToPaypal} type="radio" id="paypall" name="payment-type" checked={items.payment.type=="paypall"} />
+              <label htmlFor="paypall">PayPal</label>
+            </div>
+            {/* <div className="flex flex-row">
+              <input ref={paymentMethods[2]} onClick={() => handleSwitchPaymentMethod(paymentMethods[2])} type="radio" id="google" name="payment-type" checked={paymentMethod=="google"} />
+              <label htmlFor="google">Google</label>
+            </div> */}
           </div>
-        }
+          {
+            items.payment.type == "credit" ?
+            <>
+              <input ref={cardNumberRef} onInput={() => handleCardNumberInput(cardNumberRef)} value={items.payment['cc-number']} placeholder="XXXX XXXX XXXX XXXX (Card Number)" autoComplete="cc-number" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+              <input ref={cardExpRef} onInput={() => {handleCardExpInput(cardExpRef)}} value={items.payment['cc-exp']} placeholder="MM/YY (Exp Date)" autoComplete="cc-date" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+              <input ref={cardCVVRef} onInput={() => {handleCardCVVInput(cardCVVRef)}} value={items.payment['cc-cvv']}  placeholder="XXX (CVV/CSC)" autoComplete="cc-csc" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+              <div className="flex text-amber m-2 border-2 rounded-lg border-coolgraylight h-[64px]">
+                {
+                  items.payment.type == "credit" ?
+                  <div className=" h-full relative">
+                    <button className="m-2 border-2 border-ochre rounded-lg bg-amber p-2 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">Place Order</button>
+                  </div>
+                  :
+                  <></>
+                }
+              </div>
+            </>
+            :
+            <div className="relative mx-auto m-2 w-[500px]">
+              <span className="absolute w-[125px] h-[25px] bg-lightbg bottom-3.5 left-1/2 -translate-x-1/2 rounded"/>
+              <PayPalScriptProvider options={{clientId: "test", components: 'buttons'}}>
+                <PayPalButtons style={{layout: "vertical"}} createOrder={createOrder} onApprove={onApprove}/>
+              </PayPalScriptProvider>
+            </div>
+          }
+        </Expandable>
+
+
         {/* <GooglePayButton
           environment="TEST"
           paymentRequest={paymentRequest}
