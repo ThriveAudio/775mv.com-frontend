@@ -310,7 +310,7 @@ function checkoutReducer(items, action) {
         ...items,
         billing: {
           ...items.billing,
-            "same as shipping": action.billingCheck
+            "same_as_shipping": action.billingCheck
         }
       }
     }
@@ -332,6 +332,70 @@ function checkoutReducer(items, action) {
          ...items.billing,
             [action.field]: action.value
          }
+      }
+    }
+
+    case "payment": {
+
+      switch (action.field) {
+        case "cc-number": {
+          const value = action.value.replaceAll(" ", "")
+          if (!isNaN(value) && value.length <= 16) {
+            let newValue = ""
+            for (let i = 0; i < value.length; i++) {
+              newValue += value[i]
+              if ((i+1)%4 == 0 && i < value.length-1) {
+                newValue += " "
+              }
+            }
+
+            return {
+              ...items,
+                payment: {
+                ...items.payment,
+                   [action.field]: newValue
+                }
+            }
+          }
+          break;
+        }
+
+        case "cc-exp": {
+          const value = action.value.replaceAll("/", "").replaceAll(" ", "")
+          if (!isNaN(value) && value.length <= 4) {
+            let newValue = ""
+            for (let i = 0; i < value.length; i++) {
+              newValue += value[i]
+              if ((i+1)%2 == 0 && i < value.length-1) {
+                newValue += "/"
+              }
+            }
+
+            return {
+              ...items,
+                payment: {
+                ...items.payment,
+                   [action.field]: newValue
+                }
+            }
+          }
+        }
+
+        case "cc-cvv": {
+          const value = action.value.replaceAll(" ", "")
+          if (!isNaN(value) && value.length <= 3) {
+            return {
+              ...items,
+                payment: {
+                ...items.payment,
+                   [action.field]: value
+                }
+            }
+          }
+        }
+      
+        default:
+          break;
       }
     }
 
@@ -389,8 +453,8 @@ export default function Checkout() {
 
   const initialItems = {
     "shipping": {
-      "first name": "",
-      "last name": "",
+      "first_name": "",
+      "last_name": "",
       "email": "",
       "address1": "",
       "address2": "",
@@ -400,9 +464,9 @@ export default function Checkout() {
       "country": "",
     },
     "billing": {
-      "same as shipping": false,
-      "first name": "",
-      "last name": "",
+      "same_as_shipping": false,
+      "first_name": "",
+      "last_name": "",
       "email": "",
       "address1": "",
       "address2": "",
@@ -427,8 +491,8 @@ export default function Checkout() {
 
   const refs = {
     "shipping": {
-      "first name": useRef(null),
-      "last name": useRef(null),
+      "first_name": useRef(null),
+      "last_name": useRef(null),
       "email": useRef(null),
       "address1": useRef(null),
       "address2": useRef(null),
@@ -438,14 +502,19 @@ export default function Checkout() {
       "country": useRef(null),
     },
     "billing": {
-      "first name": useRef(null),
-      "last name": useRef(null),
+      "first_name": useRef(null),
+      "last_name": useRef(null),
       "address1": useRef(null),
       "address2": useRef(null),
       "city": useRef(null),
       "state": useRef(null),
       "zip": useRef(null),
       "country": useRef(null),
+    },
+    "payment": {
+      "cc-number": useRef(null),
+      "cc-exp": useRef(null),
+      "cc-cvv": useRef(null)
     }
   }
 
@@ -475,7 +544,7 @@ export default function Checkout() {
   function handleBillingCheck() {
     dispatch({
       type: 'billingCheck',
-      billingCheck: !items.billing['same as shipping']
+      billingCheck: !items.billing['same_as_shipping']
     })
   }
 
@@ -584,8 +653,21 @@ export default function Checkout() {
     })
   }
 
+  function handleInput(str) {
+    let slice = str.split(" ")
+
+    let classList = refs[slice[0]][slice[1]].current.className.split(" ")
+    classList = classList.filter((item) => item != "!border-burgundy")
+    refs[slice[0]][slice[1]].current.className = classList.join(" ")
+    
+    dispatch({
+      type: slice[0],
+      field: slice[1],
+      value: refs[slice[0]][slice[1]].current.value
+    })
+  }
+
   function handleExpansion(str) {
-    console.log("Exp")
     dispatch({
       type: 'expanded',
       field: str,
@@ -601,6 +683,24 @@ export default function Checkout() {
 
   }
 
+  async function handleAuthorizePayment() {
+    const res = await (await fetch('/api/authorize', {"method": "post", "body": JSON.stringify({
+      items
+    })})).json()
+    console.log(items)
+    // console.log(res)
+    let slice = res['result'].split(" ")
+    if (slice[0] == "missing") {
+      if (!items.expanded[slice[1]]) {
+        handleExpansion(slice[1])
+      }
+      let classList = refs[slice[1]][slice[2]].current.className.split(" ")
+      classList.push("!border-burgundy")
+      refs[slice[1]][slice[2]].current.className = classList.join(" ")
+      refs[slice[1]][slice[2]].current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }
+  }
+
   return (
     <>
       <div className="flex flex-col">
@@ -610,29 +710,29 @@ export default function Checkout() {
 
         {/* SHIPPING */}
         <Expandable title="Shipping Details" expanded={items.expanded.shipping} handleExpansion={handleExpansion} expansionType="shipping">
-          <input ref={refs.shipping["first name"]} onInput={() => {handleShippingInput("first name")}} value={items.shipping['first name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping["last name"]} onInput={() => {handleShippingInput("last name")}} value={items.shipping['last name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.email} onInput={() => {handleShippingInput("email")}} value={items.shipping['email']} placeholder="Email" autoComplete="email" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.address1} onInput={() => {handleShippingInput("address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
-          <input ref={refs.shipping.address2} onInput={() => {handleShippingInput("address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.city} onInput={() => {handleShippingInput("city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.zip} onInput={() => {handleShippingInput("zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.state} onInput={() => {handleShippingInput("state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.country} onInput={() => {handleShippingInput("country")}} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping["first_name"]} onInput={() => {handleInput("shipping first_name")}} value={items.shipping['first_name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping["last_name"]} onInput={() => {handleInput("shipping last_name")}} value={items.shipping['last_name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.email} onInput={() => {handleInput("shipping email")}} value={items.shipping['email']} placeholder="Email" autoComplete="email" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.address1} onInput={() => {handleInput("shipping address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
+          <input ref={refs.shipping.address2} onInput={() => {handleInput("shipping address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.city} onInput={() => {handleInput("shipping city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.zip} onInput={() => {handleInput("shipping zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <input ref={refs.shipping.country} onInput={() => {handleInput("shipping country")}} value={items.shipping['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
         </Expandable>
         
 
         {/* BILLING DETAILS */}
         <Expandable title="Billing Details" expanded={items.expanded.billing} handleExpansion={handleExpansion} expansionType="billing">
           <div className="m-2">
-            <input onClick={handleBillingCheck} type="checkbox" checked={items.billing['same as shipping']}/>
+            <input onClick={handleBillingCheck} type="checkbox" checked={items.billing['same_as_shipping']}/>
             <label className="ml-2">Same as shipping address</label>
           </div>
           {
-            !items.billing['same as shipping'] ? 
+            !items.billing['same_as_shipping'] ? 
             <>
-            <input ref={refs.billing["first name"]} onInput={() => {handleBillingInput("first name")}} value={items.billing['first name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={refs.billing["last name"]} onInput={() => {handleBillingInput("last name")}} value={items.billing['last name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.billing["first_name"]} onInput={() => {handleBillingInput("first_name")}} value={items.billing['first_name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs.billing["last_name"]} onInput={() => {handleBillingInput("last_name")}} value={items.billing['last_name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
             <input ref={refs.billing.address1} onInput={() => {handleBillingInput("address1")}} value={items.billing['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
             <input ref={refs.billing.address2} onInput={() => {handleBillingInput("address2")}} value={items.billing['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
             <input ref={refs.billing.city} onInput={() => {handleBillingInput("city")}} value={items.billing['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
@@ -673,14 +773,14 @@ export default function Checkout() {
           {
             items.payment.type == "credit" ?
             <>
-              <input ref={cardNumberRef} onInput={() => handleCardNumberInput(cardNumberRef)} value={items.payment['cc-number']} placeholder="XXXX XXXX XXXX XXXX (Card Number)" autoComplete="cc-number" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-              <input ref={cardExpRef} onInput={() => {handleCardExpInput(cardExpRef)}} value={items.payment['cc-exp']} placeholder="MM/YY (Exp Date)" autoComplete="cc-date" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-              <input ref={cardCVVRef} onInput={() => {handleCardCVVInput(cardCVVRef)}} value={items.payment['cc-cvv']}  placeholder="XXX (CVV/CSC)" autoComplete="cc-csc" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+              <input ref={refs.payment["cc-number"]} onInput={() => handleInput("payment cc-number")} value={items.payment['cc-number']} placeholder="XXXX XXXX XXXX XXXX (Card Number)" autoComplete="cc-number" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+              <input ref={refs.payment["cc-exp"]} onInput={() => {handleInput("payment cc-exp")}} value={items.payment['cc-exp']} placeholder="MM/YY (Exp Date)" autoComplete="cc-date" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+              <input ref={refs.payment["cc-cvv"]} onInput={() => {handleInput("payment cc-cvv")}} value={items.payment['cc-cvv']}  placeholder="XXX (CVV/CSC)" autoComplete="cc-csc" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
               <div className="flex text-amber m-2 border-2 rounded-lg border-coolgraylight h-[64px]">
                 {
                   items.payment.type == "credit" ?
                   <div className=" h-full relative">
-                    <button className="m-2 border-2 border-ochre rounded-lg bg-amber p-2 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">Place Order</button>
+                    <button onClick={handleAuthorizePayment} className="m-2 border-2 border-ochre rounded-lg bg-amber p-2 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">Place Order</button>
                   </div>
                   :
                   <></>
