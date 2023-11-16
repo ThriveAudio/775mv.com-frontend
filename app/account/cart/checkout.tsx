@@ -467,7 +467,6 @@ export default function Checkout() {
       "same_as_shipping": false,
       "first_name": "",
       "last_name": "",
-      "email": "",
       "address1": "",
       "address2": "",
       "city": "",
@@ -536,7 +535,7 @@ export default function Checkout() {
     }
     return countries
   }
-  console.log(getCountries())
+  // console.log(getCountries())
 
   let cartJSX = <div/>
   const [billing, setBilling] = useState(true);
@@ -691,13 +690,17 @@ export default function Checkout() {
     // console.log(res)
     let slice = res['result'].split(" ")
     if (slice[0] == "missing") {
-      if (!items.expanded[slice[1]]) {
-        handleExpansion(slice[1])
+      if (slice[1] == "cart") {
+        // TODO scroll to cart and show it's empty
+      } else {
+        if (!items.expanded[slice[1]]) {
+          handleExpansion(slice[1])
+        }
+        let classList = refs[slice[1]][slice[2]].current.className.split(" ")
+        classList.push("!border-burgundy")
+        refs[slice[1]][slice[2]].current.className = classList.join(" ")
+        refs[slice[1]][slice[2]].current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
       }
-      let classList = refs[slice[1]][slice[2]].current.className.split(" ")
-      classList.push("!border-burgundy")
-      refs[slice[1]][slice[2]].current.className = classList.join(" ")
-      refs[slice[1]][slice[2]].current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     }
   }
 
