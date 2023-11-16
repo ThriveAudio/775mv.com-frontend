@@ -530,13 +530,13 @@ export default function Checkout() {
             let code = String.fromCharCode(i) + String.fromCharCode(j)
             let name = countryName.of(code)
             if (code !== name) {
-                countries.push(name)
+                countries.push({[code]: name})
             }
         }
     }
     return countries
   }
-  //console.log(getCountries())
+  console.log(getCountries())
 
   let cartJSX = <div/>
   const [billing, setBilling] = useState(true);
@@ -719,6 +719,10 @@ export default function Checkout() {
           <input ref={refs.shipping.zip} onInput={() => {handleInput("shipping zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
           <input ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
           <input ref={refs.shipping.country} onInput={() => {handleInput("shipping country")}} value={items.shipping['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          {/* <select name="countries">
+            <option value="US">United States of America</option>
+            <option value="RU">Russia</option>
+          </select> */} {/* TODO select country instead of typing */}
         </Expandable>
         
 
