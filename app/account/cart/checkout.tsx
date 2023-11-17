@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState, useRef, useReducer } from "react"
 import Image from 'next/image'
+import { redirect, useRouter } from 'next/navigation'
 import { useAtom } from 'jotai'
 import { cartAtom } from './../../../utils/atoms'
 import * as Checkbox from '@radix-ui/react-checkbox';
@@ -518,6 +519,7 @@ export default function Checkout() {
   }
 
   const [items, dispatch] = useReducer(checkoutReducer, initialItems);
+  const router = useRouter()
 
   function getCountries(lang = 'en') {
     const A = 65
@@ -692,6 +694,7 @@ export default function Checkout() {
     if (slice[0] == "missing") {
       if (slice[1] == "cart") {
         // TODO scroll to cart and show it's empty
+        console.log("cart is empty")
       } else {
         if (!items.expanded[slice[1]]) {
           handleExpansion(slice[1])
@@ -701,6 +704,8 @@ export default function Checkout() {
         refs[slice[1]][slice[2]].current.className = classList.join(" ")
         refs[slice[1]][slice[2]].current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
       }
+    } else {
+      router.push("/test")
     }
   }
 
