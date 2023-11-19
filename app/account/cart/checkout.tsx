@@ -704,6 +704,8 @@ export default function Checkout() {
         refs[slice[1]][slice[2]].current.className = classList.join(" ")
         refs[slice[1]][slice[2]].current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
       }
+    } else if (slice[0] == "error") {
+      console.log(res['result'])
     } else {
       router.push("/test")
     }
