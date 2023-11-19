@@ -174,7 +174,7 @@ function BigInformation({desc, specs}) {
 // }
 
 
-export default function ProductPage({ info }: { info: JSON }) {
+export default function ProductPage({ info }: { info: JSON }) { // TODO procedurally load higher quality images
 
   const [cart, setCart] = useAtom(cartAtom)
 
