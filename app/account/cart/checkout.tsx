@@ -707,7 +707,7 @@ export default function Checkout() {
     } else if (slice[0] == "error") {
       console.log(res['result'])
     } else {
-      router.push("/test")
+      router.push("/account/orders/"+slice[1])
     }
   }
 

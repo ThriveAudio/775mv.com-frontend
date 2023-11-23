@@ -261,7 +261,7 @@ export default function ProductPage({ info }: { info: JSON }) { // TODO procedur
   //     return () => clearTimeout(timer);
   //   }
   // }, []);
-
+  // TODO fix cart counter BS
   return (
     <div className='relative grid grid-cols-2 grid-rows-[431px_auto]'>
       <ImageSection info={info} prevImg={previousImg} nextImg={nextImg} imgIndex={imgIndex} setIndex={userSetIndex} imgRefs={imgRefs} />

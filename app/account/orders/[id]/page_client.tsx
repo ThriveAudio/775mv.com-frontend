@@ -43,18 +43,31 @@ export default function PageOrder({order}: {order: JSON}) {
     </div>
 
     <div className='m-2 flex flex-col items-center'>
+      A confirmation email has been sent to your email address.
+    </div>
+
+    <div className='m-2 flex flex-col items-center'>
       <div className="relative w-[300px] h-[350px] border-2 border-coolgraylight rounded-lg">
         <div className='h-[312px] overflow-y-auto'>
           {items}
         </div>
         <div className='absolute -bottom-[2px] -left-[2px] w-[300px] border-2 border-coolgraylight rounded-lg'>
-          <div className='flex flex-row justify-end'>
-            <div className='mr-4 mt-1 mb-1'>
-              total: <span className='font-bold'>${total}</span>
+          <div className='flex flex-col'>
+            <div className='flex flex-row justify-end'>
+              <div className='mr-4 mt-1 mb-1'>
+                total: <span className='font-bold'>${total}</span>
+              </div>
+            </div>
+            <div className='flex flex-col items-center'>
+              <span className='w-[270px] h-[1px] bg-coolgraylight'/>
+            </div>
+            <div className='mt-2 mb-2 ml-4 mr-4 text-xs'>
+              Your card won't be charged until your entire order is shipped.
             </div>
           </div>
         </div>
       </div>
     </div>
+    <button className='absolute m-2 bottom-0 right-0 border-2 border-coolgraylight rounded-lg px-2 text-lightoutline transition-all hover:bg-burgundy'>Cancel Order</button>
   </>
 }
