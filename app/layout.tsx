@@ -9,7 +9,7 @@ import { useRef, useState, CSSProperties, useEffect } from 'react'
 import { Url } from 'next/dist/shared/lib/router/router'
 import { transform } from 'typescript'
 import { useAtom } from 'jotai'
-import { cartAtom } from './../utils/atoms'
+import { cartAtom, sessionAtom } from './../utils/atoms'
 import cartIcon from './../public/cart.png'
 import pfpIcon from './../public/pfp.png'
 import Image from 'next/image'
@@ -75,11 +75,11 @@ function NavMenu({ children, value, expanded, toggle }: { children: React.ReactN
       </button>
       {
         expanded ?
-          <div className='absolute transition-all duration-300 border-2 border-ochre rounded-b-lg w-[80.5px] h-[124px] bg-coolgraydark font-normal overflow-hidden'>
+          <div className='absolute transition-all duration-300 border-2 border-ochre rounded-b-lg w-[80.5px] max-h-[200px] bg-coolgraydark font-normal overflow-hidden'>
             {children}
           </div>
           :
-          <div className='absolute transition-all duration-300 bg-coolgraydark w-[80.5px] h-[0px]'>
+          <div className='absolute transition-all duration-300 bg-coolgraydark w-[80.5px] max-h-[0px]'>
             {children}
           </div>
       }
@@ -137,6 +137,8 @@ export default function RootLayout({
 }) {
 
   const [cart, setCart] = useAtom(cartAtom)
+  const [sessionState, setSessionState] = useAtom(sessionAtom)
+  let sessionJSX = <></>
 
   const [expanded, setExpanded] = useState(false);
 
@@ -152,6 +154,10 @@ export default function RootLayout({
       }
       setCart(amount)
     })
+    fetch('/api/check-loggedin').then(e => e.json()).then(e => {
+      setSessionState(e['result'] ? "loggedin" : "unknown")
+    })
+    // fetch('/api/check-loggedin').then(e => {console.log(e.json())})
   }, [])
 
   const mouseRef = useRef(null);
@@ -196,6 +202,14 @@ export default function RootLayout({
             <NavMenuButton href={'/account/cart'}>Cart</NavMenuButton>
             <NavMenuButton href={'/account/orders'}>Orders</NavMenuButton>
             <NavMenuButton href={'/account/data'}>Settings</NavMenuButton>
+            {
+              sessionState == "loggedin"
+              ?
+                <NavMenuButton href={'/account/logout'}>Logout</NavMenuButton>
+              :
+                <NavMenuButton href={'/account/register'}>Register</NavMenuButton>
+            }
+            {/* {sessionJSX} */}
           </NavMenu>
         </NavBar>
         <Body>
