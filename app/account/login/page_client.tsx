@@ -64,7 +64,7 @@ export default function LoginClient({redirect}) {
 
     if (slice[0] == "redirect") {
       router.back()
-    } else if(slice[0] == "error") { // TODO what if error = -1 aka no account
+    } else if(slice[0] == "error") {
       if (slice[1] == "-1") {
         setWrongLogin(true)
       } else {
