@@ -9,7 +9,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const links = [
     {'route': '/account/cart', 'name': 'Cart'},
     {'route': '/account/orders', 'name': 'Orders'},
-    {'route': '/account/data', 'name': 'Personal Data'}
+    {'route': '/account/settings', 'name': 'Settings'}
   ]
   const currentRoute = usePathname()
 

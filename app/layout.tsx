@@ -201,13 +201,20 @@ export default function RootLayout({
           <NavMenu value='Account' toggle={toggle} expanded={expanded}>
             <NavMenuButton href={'/account/cart'}>Cart</NavMenuButton>
             <NavMenuButton href={'/account/orders'}>Orders</NavMenuButton>
-            <NavMenuButton href={'/account/data'}>Settings</NavMenuButton>
+            <NavMenuButton href={'/account/settings'}>Settings</NavMenuButton>
             {
               sessionState == "loggedin"
               ?
                 <NavMenuButton href={'/account/logout'}>Logout</NavMenuButton>
               :
-                <NavMenuButton href={'/account/register'}>Register</NavMenuButton>
+                <NavMenuButton href={'/account/login'}>Login</NavMenuButton>
+            }
+            {
+              sessionState != "loggedin"
+              ?
+              <NavMenuButton href={'/account/register'}>Sign up</NavMenuButton>
+              :
+              <></>
             }
             {/* {sessionJSX} */}
           </NavMenu>
