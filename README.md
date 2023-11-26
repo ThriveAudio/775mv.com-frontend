@@ -19,3 +19,4 @@
   - [ ] terms and conditions
   - [ ] privacy policy
 - [ ] paypal
+- [ ] desktop & mobile friendly css
