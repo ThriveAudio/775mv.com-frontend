@@ -5,7 +5,7 @@ import { useState, useRef, useReducer } from "react"
 import Image from 'next/image'
 import { redirect, useRouter } from 'next/navigation'
 import { useAtom } from 'jotai'
-import { cartAtom } from './../../../utils/atoms'
+import { cartAtom, cartScrollAtom } from './../../../utils/atoms'
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { CheckIcon, CheckboxIcon } from '@radix-ui/react-icons';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -336,6 +336,30 @@ function checkoutReducer(items, action) {
       }
     }
 
+    case "country": {
+      switch (action.field) {
+        case "shipping": {
+          return {
+            ...items,
+            shipping: {
+              ...items.shipping,
+              "country": action.value 
+            }
+          }
+        }
+
+        case "billing": {
+          return {
+            ...items,
+            billing: {
+              ...items.billing,
+              "country": action.value 
+            }
+          }
+        }
+      }
+    }
+
     case "payment": {
 
       switch (action.field) {
@@ -519,6 +543,8 @@ export default function Checkout() {
   }
 
   const [items, dispatch] = useReducer(checkoutReducer, initialItems);
+  const [cart, setCart] = useAtom(cartAtom)
+  const [scrollToCart, setScrollToCart] = useAtom(cartScrollAtom)
   const router = useRouter()
 
   function getCountries(lang = 'en') {
@@ -530,7 +556,19 @@ export default function Checkout() {
         for(let j=A; j<=Z; ++j) {
             let code = String.fromCharCode(i) + String.fromCharCode(j)
             let name = countryName.of(code)
-            if (code !== name) {
+            if (code == "HK") {
+              countries.push({"HK": "Hong Kong"})
+            } else if (code == "MO") {
+              countries.push({"MO": "Macao"})
+            } else if (code == "PS") {
+              countries.push({"PS": "Palestine"})
+            } else if (code !== name && code != "FK" && code != "ZZ") {
+                // const sliced = name?.split(" ")
+                // for (let i = 0; i < sliced?.length; i++) {
+                //   if (sliced[i] == "Palestine") {
+                //     console.log(code)
+                //   }
+                // }
                 countries.push({[code]: name})
             }
         }
@@ -668,6 +706,20 @@ export default function Checkout() {
     })
   }
 
+  function handleCountry(field) {
+    dispatch({
+      type: "country",
+      field: field,
+      value: refs[field].country.current.value
+    })
+  }
+
+  const countries = getCountries().map((item) => {
+    return (
+      <option value={Object.keys(item)[0]}>{Object.keys(item)[0]} ({item[Object.keys(item)[0]]})</option>
+    )
+  })
+
   function handleExpansion(str) {
     dispatch({
       type: 'expanded',
@@ -695,6 +747,7 @@ export default function Checkout() {
       if (slice[1] == "cart") {
         // TODO scroll to cart and show it's empty
         console.log("cart is empty")
+        setScrollToCart(true)
       } else {
         if (!items.expanded[slice[1]]) {
           handleExpansion(slice[1])
@@ -728,7 +781,10 @@ export default function Checkout() {
           <input ref={refs.shipping.city} onInput={() => {handleInput("shipping city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
           <input ref={refs.shipping.zip} onInput={() => {handleInput("shipping zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
           <input ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.country} onInput={() => {handleInput("shipping country")}} value={items.shipping['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+          <select ref={refs.shipping.country} onChange={()=>(handleCountry("shipping"))} value={items.shipping.country} autoComplete="country" className='m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline'>
+            {countries}
+          </select>
+          {/* <input ref={refs.shipping.country} onInput={() => {handleInput("shipping country")}} value={items.shipping['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/> */}
           {/* <select name="countries">
             <option value="US">United States of America</option>
             <option value="RU">Russia</option>
@@ -752,7 +808,10 @@ export default function Checkout() {
             <input ref={refs.billing.city} onInput={() => {handleBillingInput("city")}} value={items.billing['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
             <input ref={refs.billing.zip} onInput={() => {handleBillingInput("zip")}} value={items.billing['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
             <input ref={refs.billing.state} onInput={() => {handleBillingInput("state")}} value={items.billing['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <input ref={refs.billing.country} onInput={() => {handleBillingInput("country")}} value={items.billing['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <select ref={refs.billing.country} onChange={()=>(handleCountry("billing"))} value={items.billing.country} className='m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline'>
+              {countries}
+            </select>
+            {/* <input ref={refs.billing.country} onInput={() => {handleBillingInput("country")}} value={items.billing['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/> */}
             </>
             :
             <></>

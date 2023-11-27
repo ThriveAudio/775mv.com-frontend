@@ -1,8 +1,8 @@
 'use client'
 
 import { useAtom } from 'jotai'
-import { cartAtom } from './../../../utils/atoms'
-import { useReducer } from 'react'
+import { cartAtom, cartScrollAtom } from './../../../utils/atoms'
+import { useReducer, useRef } from 'react'
 import Image from 'next/image'
 import Link from "next/link"
 
@@ -38,6 +38,18 @@ export default function Cart({initialItems}: {initialItems: Array<JSON>}) {
 
   const [items, dispatch] = useReducer(itemsReducer, initialItems)
   const [cart, setCart] = useAtom(cartAtom)
+  const [scrollToCart, setScrollToCart] = useAtom(cartScrollAtom)
+  const emptyCartText = useRef(null)
+
+  if (scrollToCart) {
+    emptyCartText.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    
+    let classList = emptyCartText.current.className.split(" ")
+    classList.push("text-burgundy")
+    emptyCartText.current.className = classList.join(" ")
+
+    setScrollToCart(false)
+  }
 
   async function handleUpdateCheck(e) {
     //while (e.target.id == "") {console.log("waiting for id")}
@@ -206,7 +218,7 @@ export default function Cart({initialItems}: {initialItems: Array<JSON>}) {
   if (items.length == 0) {
     return (
       <>
-        <p className="mx-auto m-[20px] font-bold text-2xl">Cart is Empty</p>
+        <p ref={emptyCartText} className="mx-auto m-[20px] font-bold text-2xl">Cart is Empty</p>
         <a href="/products" className="mx-auto border-2 border-ochre rounded-lg bg-amber p-2 text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">Browse Products</a>
       </>
     )
