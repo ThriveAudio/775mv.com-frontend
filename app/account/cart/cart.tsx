@@ -219,7 +219,7 @@ export default function Cart({initialItems}: {initialItems: Array<JSON>}) {
     return (
       <>
         <p ref={emptyCartText} className="mx-auto m-[20px] font-bold text-2xl">Cart is Empty</p>
-        <a href="/products" className="mx-auto border-2 border-ochre rounded-lg bg-amber p-2 text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">Browse Products</a>
+        <a href="/products" className="transition-all mx-auto border-2 border-ochre rounded-lg bg-amber p-2 text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">Browse Products</a>
       </>
     )
   } else {
