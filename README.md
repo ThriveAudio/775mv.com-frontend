@@ -4,7 +4,7 @@
 
 - [ ] checkout
   - [x] scroll to cart and show it's empty when placing order
-  - [ ] select country instead of typing
+  - [x] select country instead of typing
   - [ ] change cart and checkout check to opening payment method tab instead of placing order
 - [ ] email
   - [ ] confirmation
