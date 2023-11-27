@@ -5,6 +5,7 @@
 - [ ] checkout
   - [ ] scroll to cart and show it's empty when placing order
   - [ ] select country instead of typing
+  - [ ] change cart and checkout check to opening payment method tab instead of placing order
 - [ ] email
   - [ ] confirmation
   - [ ] validation
@@ -14,6 +15,7 @@
 - [ ] login
   - [x] disable button hovering on disabled login
   - [ ] session expiration
+  - [ ] trusted device check
 - [ ] pages
   - [ ] about
   - [ ] terms and conditions
