@@ -20,3 +20,4 @@
   - [ ] privacy policy
 - [ ] paypal
 - [ ] desktop & mobile friendly css
+- [ ] loading indicator when waiting for http response
