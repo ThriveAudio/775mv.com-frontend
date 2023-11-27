@@ -3,7 +3,7 @@
 ## todo
 
 - [ ] checkout
-  - [ ] scroll to cart and show it's empty when placing order
+  - [x] scroll to cart and show it's empty when placing order
   - [ ] select country instead of typing
   - [ ] change cart and checkout check to opening payment method tab instead of placing order
 - [ ] email
@@ -23,3 +23,4 @@
 - [ ] paypal
 - [ ] desktop & mobile friendly css
 - [ ] loading indicator when waiting for http response
+- [ ] 404 page
