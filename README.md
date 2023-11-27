@@ -5,10 +5,10 @@
 - [ ] checkout
   - [x] scroll to cart and show it's empty when placing order
   - [x] select country instead of typing
-  - [ ] change cart and checkout check to opening payment method tab instead of placing order
+  - [ ] change cart and checkout check to opening payment method tab instead of placing order?
 - [ ] email
   - [ ] confirmation
-  - [ ] validation
+  - [x] validation
 - [ ] include shipping price in website
 - [ ] check cart counter BS
 - [ ] refresh router in cart (and account?)

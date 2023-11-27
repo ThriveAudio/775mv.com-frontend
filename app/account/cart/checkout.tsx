@@ -736,6 +736,16 @@ export default function Checkout() {
 
   }
 
+  function indicateError(section, field) {
+    if (!items.expanded[section]) {
+      handleExpansion(section)
+    }
+    let classList = refs[section][field].current.className.split(" ")
+    classList.push("!border-burgundy")
+    refs[section][field].current.className = classList.join(" ")
+    refs[section][field].current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }
+
   async function handleAuthorizePayment() {
     const res = await (await fetch('/api/authorize', {"method": "post", "body": JSON.stringify({
       items
@@ -749,16 +759,14 @@ export default function Checkout() {
         console.log("cart is empty")
         setScrollToCart(true)
       } else {
-        if (!items.expanded[slice[1]]) {
-          handleExpansion(slice[1])
-        }
-        let classList = refs[slice[1]][slice[2]].current.className.split(" ")
-        classList.push("!border-burgundy")
-        refs[slice[1]][slice[2]].current.className = classList.join(" ")
-        refs[slice[1]][slice[2]].current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        indicateError(slice[1], slice[2])
       }
     } else if (slice[0] == "error") {
       console.log(res['result'])
+    } else if (slice[0] == "wrong") {
+      if (slice[1] == "email") {
+        indicateError("shipping", "email")
+      }
     } else {
       router.push("/account/orders/"+slice[1])
     }
