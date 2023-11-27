@@ -83,7 +83,7 @@ function Information({ info, amount, addAmount, subtractAmount, updateAmount, on
   return (
     <div className='justify-self-start ml-4 mt-[19px] col-start-2 h-[412px] w-[500px] text-amber relative flex flex-col'>
       <div className='self-left font-bold text-4xl'>{info['name']}</div>
-      <p className='text-wrap mt-4'>{info['description']}</p>
+      <div className='text-wrap mt-4'><ReactMarkdown>{info['description']}</ReactMarkdown></div>
 
       <div className='absolute bottom-[174px] right-0'>
         <button onClick={subtractAmount} onMouseDown={subtractHold} onMouseUp={subtractUnhold} className='interactable h-[44px] w-[30px] bg-coolgraydark border-l-2 border-t-2 border-b-2 border-coolgraylight rounded-l-lg active:scale-[95%]'>-</button>
