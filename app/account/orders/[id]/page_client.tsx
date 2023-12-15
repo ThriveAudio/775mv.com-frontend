@@ -43,7 +43,7 @@ export default function PageOrder({order}: {order: JSON}) {
     </div>
 
     <div className='m-2 flex flex-col items-center'>
-      A confirmation email and an order receipt have been sent to your email address.
+      An order receipt has been sent to your email address.
     </div>
 
     <div className='m-2 flex flex-col items-center'>

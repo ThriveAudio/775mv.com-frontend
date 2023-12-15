@@ -440,11 +440,16 @@ function checkoutReducer(items, action) {
   return items
 }
 
-function Expandable({children, title, expanded, handleExpansion, expansionType}) {
+function Expandable({children, disabled, title, expanded, handleExpansion, expansionType}) {
+  function handleClick() {
+    if (!disabled) {
+      handleExpansion(expansionType)
+    }
+  }
   if (expanded) {
     return (
       <div className="transition-all ease-in duration-150 m-2 flex flex-col max-h-[600px] border-coolgraylight border-2 rounded-lg overflow-hidden">
-        <button onClick={() => handleExpansion(expansionType)} className="relative flex">
+        <button onClick={handleClick} className="relative flex">
           <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-90">
             <div className="relative w-[20px] h-[20px]">
               <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
@@ -459,14 +464,29 @@ function Expandable({children, title, expanded, handleExpansion, expansionType})
   } else {
     return (
       <div className="transition-all ease-out duration-150 m-2 flex flex-col max-h-[55px] border-coolgraylight border-2 rounded-lg overflow-hidden">
-        <button onClick={() => handleExpansion(expansionType)} className="relative flex">
+        <button onClick={handleClick} className="relative flex">
           <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-0">
             <div className="relative w-[20px] h-[20px]">
-              <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
-              <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
+              {
+                disabled ?
+                <>
+                <span className="absolute top-[4.5px] block bg-coolgraylight h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
+                <span className="absolute bottom-[4.5px] block bg-coolgraylight h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
+                </>
+                :
+                <>
+                <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
+                <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
+                </>
+              }
             </div>
           </div>
-          <p className="mx-auto m-2 font-bold text-2xl">{title}</p>
+          {
+            disabled ?
+            <p className="mx-auto m-2 font-bold text-2xl text-amber/30">{title}</p>
+            :
+            <p className="mx-auto m-2 font-bold text-2xl">{title}</p>
+          }
         </button>
         {children}
       </div>
@@ -545,6 +565,9 @@ export default function Checkout() {
   const [items, dispatch] = useReducer(checkoutReducer, initialItems);
   const [cart, setCart] = useAtom(cartAtom)
   const [scrollToCart, setScrollToCart] = useAtom(cartScrollAtom)
+  const [emailConfirmed, setEmailConfirmed] = useState(false)
+  const [awaitingEmail, setAwaitingEmail] = useState(false)
+  let emailIntervalRef = useRef(null)
   const router = useRouter()
 
   function getCountries(lang = 'en') {
@@ -746,6 +769,37 @@ export default function Checkout() {
     refs[section][field].current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }
 
+  async function handleConfirmEmail() {
+    const res = await (await fetch('/api/confirm-email', {"method": "post", "body": JSON.stringify({
+      "email": refs.shipping.email.current.value
+    })})).json()
+    console.log(res)
+    if (res.result == "error") {
+      let classList = refs.shipping.email.current.className.split(" ")
+      classList.push("!border-burgundy")
+      refs.shipping.email.current.className = classList.join(" ")
+      return
+    } else if (res.result == "confirmed") {
+      setEmailConfirmed(true)
+      return
+    }
+
+    setAwaitingEmail(true)
+
+    emailIntervalRef = setInterval(() => {
+      const res = fetch('/api/email-confirmed', {"method": "post", "body": JSON.stringify({
+        "email": refs.shipping.email.current.value
+      })}).then((e)=>e.json()).then(e=>{
+        if (e['result'] == true) {
+          clearInterval(emailIntervalRef)
+          setAwaitingEmail(false)
+          setEmailConfirmed(true)
+        }
+      })
+
+    }, 3000)
+  }
+
   async function handleAuthorizePayment() {
     const res = await (await fetch('/api/authorize', {"method": "post", "body": JSON.stringify({
       items
@@ -755,8 +809,6 @@ export default function Checkout() {
     let slice = res['result'].split(" ")
     if (slice[0] == "missing") {
       if (slice[1] == "cart") {
-        // TODO scroll to cart and show it's empty
-        console.log("cart is empty")
         setScrollToCart(true)
       } else {
         indicateError(slice[1], slice[2])
@@ -783,13 +835,29 @@ export default function Checkout() {
         <Expandable title="Shipping Details" expanded={items.expanded.shipping} handleExpansion={handleExpansion} expansionType="shipping">
           <input ref={refs.shipping["first_name"]} onInput={() => {handleInput("shipping first_name")}} value={items.shipping['first_name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
           <input ref={refs.shipping["last_name"]} onInput={() => {handleInput("shipping last_name")}} value={items.shipping['last_name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.email} onInput={() => {handleInput("shipping email")}} value={items.shipping['email']} placeholder="Email" autoComplete="email" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.address1} onInput={() => {handleInput("shipping address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline autofill:!text-ochre autofill:!bg-coolgraydark"/>
-          <input ref={refs.shipping.address2} onInput={() => {handleInput("shipping address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.city} onInput={() => {handleInput("shipping city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.zip} onInput={() => {handleInput("shipping zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <input ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-          <select ref={refs.shipping.country} onChange={()=>(handleCountry("shipping"))} value={items.shipping.country} autoComplete="country" className='m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline'>
+          <div className="flex flex-row">
+            <input ref={refs.shipping.email} onInput={() => {handleInput("shipping email")}} value={items.shipping['email']} placeholder="Email" autoComplete="email" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <button onClick={handleConfirmEmail} className="m-2 border-2 border-ochre rounded-lg px-2 bg-amber text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">
+              Confirm Email
+            </button>
+          </div>
+          <p className="text-sm ml-3 mb-2 -mt-1">
+            We need the email to communicate order details.
+          </p>
+          {
+            awaitingEmail ?
+          <p className="text-sm ml-3 mb-2 -mt-1">
+            We sent a confirmation email. Please check your inbox.
+          </p>
+          :
+          <></>
+          }
+          <input disabled={!emailConfirmed} ref={refs.shipping.address1} onInput={() => {handleInput("shipping address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
+          <input disabled={!emailConfirmed} ref={refs.shipping.address2} onInput={() => {handleInput("shipping address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
+          <input disabled={!emailConfirmed} ref={refs.shipping.city} onInput={() => {handleInput("shipping city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
+          <input disabled={!emailConfirmed} ref={refs.shipping.zip} onInput={() => {handleInput("shipping zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
+          <input disabled={!emailConfirmed} ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
+          <select disabled={!emailConfirmed} ref={refs.shipping.country} onChange={()=>(handleCountry("shipping"))} value={items.shipping.country} autoComplete="country" className='m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight'>
             {countries}
           </select>
           {/* <input ref={refs.shipping.country} onInput={() => {handleInput("shipping country")}} value={items.shipping['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/> */}
@@ -801,7 +869,7 @@ export default function Checkout() {
         
 
         {/* BILLING DETAILS */}
-        <Expandable title="Billing Details" expanded={items.expanded.billing} handleExpansion={handleExpansion} expansionType="billing">
+        <Expandable disabled={!emailConfirmed} title="Billing Details" expanded={items.expanded.billing} handleExpansion={handleExpansion} expansionType="billing">
           <div className="m-2">
             <input onClick={handleBillingCheck} type="checkbox" checked={items.billing['same_as_shipping']}/>
             <label className="ml-2">Same as shipping address</label>
@@ -829,14 +897,14 @@ export default function Checkout() {
 
 
         {/* SHIPPING METHOD */}
-        <Expandable title="Shipping Method" expanded={items.expanded["shipping method"]} handleExpansion={handleExpansion} expansionType="shipping method">
+        <Expandable disabled={!emailConfirmed} title="Shipping Method" expanded={items.expanded["shipping method"]} handleExpansion={handleExpansion} expansionType="shipping method">
           <p className="m-2">USA flat rate: $8.50</p>
         </Expandable>
         
 
 
         {/* PAYMENT */}
-        <Expandable title="Payment Method" expanded={items.expanded.payment} handleExpansion={handleExpansion} expansionType="payment">
+        <Expandable disabled={!emailConfirmed} title="Payment Method" expanded={items.expanded.payment} handleExpansion={handleExpansion} expansionType="payment">
           <div className="m-2 flex flex-col">
             <div className="flex flex-row">
               <input onClick={handleSwitchToCredit} type="radio" id="credit" name="payment-type" checked={items.payment.type=="credit"} />
