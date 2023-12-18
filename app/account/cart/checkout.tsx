@@ -446,6 +446,11 @@ function Expandable({children, disabled, title, expanded, handleExpansion, expan
       handleExpansion(expansionType)
     }
   }
+
+  if (expanded && disabled) {
+    handleExpansion(expansionType)
+  }
+
   if (expanded) {
     return (
       <div className="transition-all ease-in duration-150 m-2 flex flex-col max-h-[600px] border-coolgraylight border-2 rounded-lg overflow-hidden">
@@ -721,6 +726,10 @@ export default function Checkout() {
     let classList = refs[slice[0]][slice[1]].current.className.split(" ")
     classList = classList.filter((item) => item != "!border-burgundy")
     refs[slice[0]][slice[1]].current.className = classList.join(" ")
+
+    if (slice[0] == "shipping" && slice[1] == "email") {
+      setEmailConfirmed(false)
+    }
     
     dispatch({
       type: slice[0],
@@ -837,7 +846,7 @@ export default function Checkout() {
           <input ref={refs.shipping["last_name"]} onInput={() => {handleInput("shipping last_name")}} value={items.shipping['last_name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
           <div className="flex flex-row">
             <input ref={refs.shipping.email} onInput={() => {handleInput("shipping email")}} value={items.shipping['email']} placeholder="Email" autoComplete="email" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <button onClick={handleConfirmEmail} className="m-2 border-2 border-ochre rounded-lg px-2 bg-amber text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">
+            <button disabled={emailConfirmed} onClick={handleConfirmEmail} className="m-2 border-2 border-ochre rounded-lg px-2 bg-amber text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:hover:scale-100 disabled:active:scale-100 disabled:shadow-none disabled:border-ochre/[.01] disabled:bg-ochre/50">
               Confirm Email
             </button>
           </div>
