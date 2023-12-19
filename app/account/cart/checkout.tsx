@@ -424,11 +424,11 @@ function checkoutReducer(items, action) {
       }
     }
 
-    case "expanded": {
+    case "section-state": {
       return {
       ...items,
-        expanded: {
-          ...items.expanded,
+        "section-state": {
+          ...items['section-state'],
           [action.field]: action.value
         }
       }
@@ -440,62 +440,64 @@ function checkoutReducer(items, action) {
   return items
 }
 
-function Expandable({children, disabled, title, expanded, handleExpansion, expansionType}) {
+function Expandable({children, title, state, handleExpansion, expansionType}) {
   function handleClick() {
-    if (!disabled) {
+    if (state != "disabled") {
       handleExpansion(expansionType)
     }
   }
 
-  if (expanded && disabled) {
-    handleExpansion(expansionType)
-  }
-
-  if (expanded) {
-    return (
-      <div className="transition-all ease-in duration-150 m-2 flex flex-col max-h-[600px] border-coolgraylight border-2 rounded-lg overflow-hidden">
-        <button onClick={handleClick} className="relative flex">
-          <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-90">
-            <div className="relative w-[20px] h-[20px]">
-              <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
-              <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
-            </div>
-          </div>
-          <p className="mx-auto m-2 font-bold text-2xl">{title}</p>
-        </button>
-        {children}
-      </div>
-    )
-  } else {
-    return (
-      <div className="transition-all ease-out duration-150 m-2 flex flex-col max-h-[55px] border-coolgraylight border-2 rounded-lg overflow-hidden">
-        <button onClick={handleClick} className="relative flex">
-          <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-0">
-            <div className="relative w-[20px] h-[20px]">
-              {
-                disabled ?
-                <>
-                <span className="absolute top-[4.5px] block bg-coolgraylight h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
-                <span className="absolute bottom-[4.5px] block bg-coolgraylight h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
-                </>
-                :
-                <>
+  switch (state) {
+    case "open":
+      return (
+        <div className="transition-all ease-in duration-150 m-2 flex flex-col max-h-[600px] border-coolgraylight border-2 rounded-lg overflow-hidden">
+          <button onClick={handleClick} className="relative flex">
+            <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-90">
+              <div className="relative w-[20px] h-[20px]">
                 <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
                 <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
-                </>
-              }
+              </div>
             </div>
-          </div>
-          {
-            disabled ?
-            <p className="mx-auto m-2 font-bold text-2xl text-amber/30">{title}</p>
-            :
             <p className="mx-auto m-2 font-bold text-2xl">{title}</p>
-          }
-        </button>
-        {children}
-      </div>
-    )
+          </button>
+          {children}
+        </div>
+      )
+
+    case "closed":
+      return (
+        <div className="transition-all ease-out duration-150 m-2 flex flex-col max-h-[55px] border-coolgraylight border-2 rounded-lg overflow-hidden">
+          <button onClick={handleClick} className="relative flex">
+            <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-0">
+              <div className="relative w-[20px] h-[20px]">
+                <span className="absolute top-[4.5px] block bg-white h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
+                <span className="absolute bottom-[4.5px] block bg-white h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
+              </div>
+            </div>
+            <p className="mx-auto m-2 font-bold text-2xl">{title}</p>
+          </button>
+          {children}
+        </div>
+      )
+
+    case "disabled":
+      return (
+        <div className="transition-all ease-out duration-150 m-2 flex flex-col max-h-[55px] border-coolgraylight border-2 rounded-lg overflow-hidden">
+          <div className="relative flex">
+            <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-0">
+              <div className="relative w-[20px] h-[20px]">
+                <span className="absolute top-[4.5px] block bg-coolgraylight h-[3px] w-[20px] rounded rotate-[26.56deg]"/>
+                <span className="absolute bottom-[4.5px] block bg-coolgraylight h-[3px] w-[20px] rounded -rotate-[26.56deg]"/>
+              </div>
+            </div>
+            <p className="mx-auto m-2 font-bold text-2xl text-amber/30">{title}</p>
+          </div>
+          {children}
+        </div>
+      )
+  
+    default:
+      break;
   }
 }
 
@@ -530,11 +532,11 @@ export default function Checkout() {
        "cc-exp": "",
        "cc-cvv": ""
     },
-    "expanded": {
-      "shipping": false,
-      "billing": false,
-      "payment": false,
-      "shipping method": false
+    "section-state": {
+      "shipping": "closed",
+      "billing": "closed",
+      "payment": "closed",
+      "shipping method": "closed"
     }
   }
 
@@ -720,6 +722,17 @@ export default function Checkout() {
     })
   }
 
+  function setSectionsEnabled(enabled: boolean) {
+    const sections = ["billing", "payment", "shipping method"]
+    for (let i = 0; i < 3; i++) {
+      dispatch({
+        type: 'section-state',
+        field: sections[i],
+        value: enabled ? "closed" : "disabled"
+      })
+    }
+  }
+
   function handleInput(str) {
     let slice = str.split(" ")
 
@@ -729,6 +742,8 @@ export default function Checkout() {
 
     if (slice[0] == "shipping" && slice[1] == "email") {
       setEmailConfirmed(false)
+      // TODO change sections state to disabled
+      setSectionsEnabled(false)
     }
     
     dispatch({
@@ -753,11 +768,19 @@ export default function Checkout() {
   })
 
   function handleExpansion(str) {
-    dispatch({
-      type: 'expanded',
-      field: str,
-      value:!items.expanded[str]
-    })
+    if (items['section-state'][str] == "closed") {
+      dispatch({
+        type: 'section-state',
+        field: str,
+        value: "open"
+      })
+    } else if (items['section-state'][str] == "open") {
+      dispatch({
+        type: 'section-state',
+        field: str,
+        value: "closed"
+      })
+    }
   }
 
   function createOrder() {
@@ -769,7 +792,7 @@ export default function Checkout() {
   }
 
   function indicateError(section, field) {
-    if (!items.expanded[section]) {
+    if (items["section-state"][section] == "closed") {
       handleExpansion(section)
     }
     let classList = refs[section][field].current.className.split(" ")
@@ -790,6 +813,7 @@ export default function Checkout() {
       return
     } else if (res.result == "confirmed") {
       setEmailConfirmed(true)
+      setSectionsEnabled(true)
       return
     }
 
@@ -803,6 +827,7 @@ export default function Checkout() {
           clearInterval(emailIntervalRef)
           setAwaitingEmail(false)
           setEmailConfirmed(true)
+          setSectionsEnabled(true)
         }
       })
 
@@ -841,7 +866,7 @@ export default function Checkout() {
         </div> */}
 
         {/* SHIPPING */}
-        <Expandable title="Shipping Details" expanded={items.expanded.shipping} handleExpansion={handleExpansion} expansionType="shipping">
+        <Expandable title="Shipping Details" state={items["section-state"].shipping} handleExpansion={handleExpansion} expansionType="shipping">
           <input ref={refs.shipping["first_name"]} onInput={() => {handleInput("shipping first_name")}} value={items.shipping['first_name']} placeholder="First Name" autoComplete="given-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
           <input ref={refs.shipping["last_name"]} onInput={() => {handleInput("shipping last_name")}} value={items.shipping['last_name']} placeholder="Last Name" autoComplete="family-name" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
           <div className="flex flex-row">
@@ -878,7 +903,7 @@ export default function Checkout() {
         
 
         {/* BILLING DETAILS */}
-        <Expandable disabled={!emailConfirmed} title="Billing Details" expanded={items.expanded.billing} handleExpansion={handleExpansion} expansionType="billing">
+        <Expandable disabled={!emailConfirmed} title="Billing Details" state={items["section-state"].billing} handleExpansion={handleExpansion} expansionType="billing">
           <div className="m-2">
             <input onClick={handleBillingCheck} type="checkbox" checked={items.billing['same_as_shipping']}/>
             <label className="ml-2">Same as shipping address</label>
@@ -906,14 +931,14 @@ export default function Checkout() {
 
 
         {/* SHIPPING METHOD */}
-        <Expandable disabled={!emailConfirmed} title="Shipping Method" expanded={items.expanded["shipping method"]} handleExpansion={handleExpansion} expansionType="shipping method">
+        <Expandable disabled={!emailConfirmed} title="Shipping Method" state={items["section-state"]["shipping method"]} handleExpansion={handleExpansion} expansionType="shipping method">
           <p className="m-2">USA flat rate: $8.50</p>
         </Expandable>
         
 
 
         {/* PAYMENT */}
-        <Expandable disabled={!emailConfirmed} title="Payment Method" expanded={items.expanded.payment} handleExpansion={handleExpansion} expansionType="payment">
+        <Expandable disabled={!emailConfirmed} title="Payment Method" state={items["section-state"].payment} handleExpansion={handleExpansion} expansionType="payment">
           <div className="m-2 flex flex-col">
             <div className="flex flex-row">
               <input onClick={handleSwitchToCredit} type="radio" id="credit" name="payment-type" checked={items.payment.type=="credit"} />
