@@ -7,7 +7,7 @@
   - [x] select country instead of typing
   - [ ] change cart and checkout check to opening payment method tab instead of placing order?
 - [ ] email
-  - [ ] confirmation
+  - [x] confirmation
   - [x] validation
 - [ ] include shipping price in website
 - [ ] check cart counter BS
