@@ -9,6 +9,8 @@
 - [ ] email
   - [x] confirmation
   - [x] validation
+  - [x] confirmation on settings page
+  - [x] set email to active email on confirmation
 - [ ] include shipping price in website
 - [ ] check cart counter BS
 - [ ] refresh router in cart (and account?)
