@@ -26,3 +26,4 @@
 - [ ] desktop & mobile friendly css
 - [ ] loading indicator when waiting for http response
 - [ ] 404 page
+- [ ] input field css & js
