@@ -501,7 +501,7 @@ function Expandable({children, title, state, handleExpansion, expansionType}) {
   }
 }
 
-export default function Checkout() {
+export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
 
   const initialItems = {
     "shipping": {

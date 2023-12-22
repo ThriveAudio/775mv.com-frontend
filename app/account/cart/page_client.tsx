@@ -1,11 +1,11 @@
 import Cart from "./cart";
 import Checkout from "./checkout";
 
-export default function CartPage({initialItems}: {initialItems: Array<JSON>}) {
+export default function CartPage({initialItems, shippingPrices}: {initialItems: Array<JSON>, shippingPrices: JSON}) {
   return (
     <div className="flex flex-col h-[800px] overflow-y-auto">
       <Cart initialItems={initialItems}/>
-      <Checkout/>
+      <Checkout shippingPrices={shippingPrices}/>
     </div>
   )
 }

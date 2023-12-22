@@ -22,8 +22,13 @@ export default async function PageCart() {
     return item
   })
 
+  const shippingReq = await fetch('http://127.0.0.1:8000/get-shipping-methods', {"method": "post", "body": JSON.stringify({'sessionId': session})})
+  //const res = await fetch('http://127.0.0.1:3000/api/cart')
+  const shippingResJson = await shippingReq.json()
+  console.log(shippingResJson)
+
 
   return (
-    <CartPage initialItems={items}/>
+    <CartPage initialItems={items} shippingPrices={shippingResJson}/>
   )
 }
