@@ -534,9 +534,9 @@ export default function Checkout() {
     },
     "section-state": {
       "shipping": "closed",
-      "billing": "closed",
-      "payment": "closed",
-      "shipping method": "closed"
+      "billing": "disabled",
+      "payment": "disabled",
+      "shipping method": "disabled"
     }
   }
 
@@ -886,12 +886,12 @@ export default function Checkout() {
           :
           <></>
           }
-          <input disabled={!emailConfirmed} ref={refs.shipping.address1} onInput={() => {handleInput("shipping address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
-          <input disabled={!emailConfirmed} ref={refs.shipping.address2} onInput={() => {handleInput("shipping address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
-          <input disabled={!emailConfirmed} ref={refs.shipping.city} onInput={() => {handleInput("shipping city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
-          <input disabled={!emailConfirmed} ref={refs.shipping.zip} onInput={() => {handleInput("shipping zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
-          <input disabled={!emailConfirmed} ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight"/>
-          <select disabled={!emailConfirmed} ref={refs.shipping.country} onChange={()=>(handleCountry("shipping"))} value={items.shipping.country} autoComplete="country" className='m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight'>
+          <input disabled={!emailConfirmed} ref={refs.shipping.address1} onInput={() => {handleInput("shipping address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
+          <input disabled={!emailConfirmed} ref={refs.shipping.address2} onInput={() => {handleInput("shipping address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
+          <input disabled={!emailConfirmed} ref={refs.shipping.city} onInput={() => {handleInput("shipping city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
+          <input disabled={!emailConfirmed} ref={refs.shipping.zip} onInput={() => {handleInput("shipping zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
+          <input disabled={!emailConfirmed} ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
+          <select disabled={!emailConfirmed} ref={refs.shipping.country} onChange={()=>(handleCountry("shipping"))} value={items.shipping.country} autoComplete="country" className='m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30'>
             {countries}
           </select>
           {/* <input ref={refs.shipping.country} onInput={() => {handleInput("shipping country")}} value={items.shipping['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/> */}
