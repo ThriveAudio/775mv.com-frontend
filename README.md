@@ -2,11 +2,10 @@
 
 ## todo
 
-- [ ] checkout
+- [x] checkout
   - [x] scroll to cart and show it's empty when placing order
   - [x] select country instead of typing
-  - [ ] change cart and checkout check to opening payment method tab instead of placing order?
-- [ ] email
+- [x] email
   - [x] confirmation
   - [x] validation
   - [x] confirmation on settings page
