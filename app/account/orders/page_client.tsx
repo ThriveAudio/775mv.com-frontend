@@ -22,6 +22,7 @@ export default function PageClient({items}) {
         </a>
       )
     })
+    itemsJSX.reverse()
 
     // TODO add shipping price
 
