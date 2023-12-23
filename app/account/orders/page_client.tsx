@@ -30,7 +30,7 @@ export default function PageClient({items}) {
         <div className="m-2 flex flex-col items-center text-2xl font-bold">
           Orders
         </div>
-        <div className="m-2 flex flex-col items-center">
+        <div className="m-2 flex flex-col items-center overflow-auto">
           {itemsJSX}
         </div>
       </>
