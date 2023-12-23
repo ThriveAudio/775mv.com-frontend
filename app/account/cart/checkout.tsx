@@ -574,6 +574,7 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
   const [scrollToCart, setScrollToCart] = useAtom(cartScrollAtom)
   const [emailConfirmed, setEmailConfirmed] = useState(false)
   const [awaitingEmail, setAwaitingEmail] = useState(false)
+  const [shippingPrice, setShippingPrice] = useState(0)
   let emailIntervalRef = useRef(null)
   const router = useRouter()
 
@@ -759,6 +760,17 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
       field: field,
       value: refs[field].country.current.value
     })
+
+    if (field == "shipping") {
+      for (let i = 0; i < Object.keys(shippingPrices).length; i++) {
+        if (Object.keys(shippingPrices)[i] == refs.shipping.country.current.value) {
+          setShippingPrice(shippingPrices[Object.keys(shippingPrices)[i]])
+          return
+        } else {
+          setShippingPrice(shippingPrices["Worldwide"])
+        }
+      }
+    }
   }
 
   const countries = getCountries().map((item) => {
@@ -894,6 +906,9 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
           <select disabled={!emailConfirmed} ref={refs.shipping.country} onChange={()=>(handleCountry("shipping"))} value={items.shipping.country} autoComplete="country" className='m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30'>
             {countries}
           </select>
+          <p className="ml-3 mb-2">
+            Shipping price: ${shippingPrice}
+          </p>
           {/* <input ref={refs.shipping.country} onInput={() => {handleInput("shipping country")}} value={items.shipping['country']} placeholder="Country" autoComplete="country" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/> */}
           {/* <select name="countries">
             <option value="US">United States of America</option>
@@ -930,10 +945,10 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
 
 
 
-        {/* SHIPPING METHOD */}
+        {/* SHIPPING METHOD
         <Expandable disabled={!emailConfirmed} title="Shipping Method" state={items["section-state"]["shipping method"]} handleExpansion={handleExpansion} expansionType="shipping method">
           <p className="m-2">USA flat rate: $8.50</p>
-        </Expandable>
+        </Expandable> */}
         
 
 
