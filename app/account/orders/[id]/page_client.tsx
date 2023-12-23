@@ -35,6 +35,7 @@ export default function PageOrder({order}: {order: JSON}) {
   order['items']['newItems'].forEach(item => {
     total += item['price']*item['amount']
   });
+  total += order.user.shipping.price
 
   return <>
     <div className="m-2 flex flex-col items-center text-2xl font-bold">
@@ -54,8 +55,13 @@ export default function PageOrder({order}: {order: JSON}) {
         <div className='absolute -bottom-[2px] -left-[2px] w-[300px] border-2 border-coolgraylight rounded-lg'>
           <div className='flex flex-col'>
             <div className='flex flex-row justify-end'>
-              <div className='mr-4 mt-1 mb-1'>
-                total: <span className='font-bold'>${total}</span>
+              <div className='mr-4 mt-1'>
+                Shipping: <span className='font-bold'>${order.user.shipping.price}</span>
+              </div>
+            </div>
+            <div className='flex flex-row justify-end'>
+              <div className='mr-4 mb-1'>
+                Total: <span className='font-bold'>${total}</span>
               </div>
             </div>
             <div className='flex flex-col items-center'>
