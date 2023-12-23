@@ -6,17 +6,10 @@ import { useRef, useReducer, useState } from "react"
 function registerReducer(items, action) {
   switch (action.type) {
     case "input":
-      if (action.field == "email") {
-        // TODO email validation
-        return {
-          ...items,
-          email: action.value
-        }
-      } else if (action.field == "password") {
-        return {
-          ...items,
-          password: action.value
-        }
+      // TODO email validation
+      return {
+        ...items,
+        [action.field]: action.value
       }
   }
 }
@@ -25,7 +18,8 @@ export default function RegisterClient({redirect}) {
 
   const initialItems = {
     "email": "",
-    "password": ""
+    "password": "",
+    "check": false
   }
 
   const refs = {
@@ -102,6 +96,14 @@ export default function RegisterClient({redirect}) {
 
   // console.log(emailConfirmed)
 
+  function handleCheck() {
+    dispatch({
+      "type": "input",
+      "field": "check",
+      "value": !items.check
+    })
+  }
+
   return (
     <>
       <div className="m-2 flex flex-col items-center text-2xl font-bold">
@@ -124,6 +126,15 @@ export default function RegisterClient({redirect}) {
           </button>
         }
         <input disabled={!emailConfirmed} ref={refs.password} onInput={() => handleInputUpdate("password")} value={items['password']} placeholder="Password" autoComplete="password" type="password" className="m-2 w-[211px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:border-coolgraylight/30"/>
+        <div className="m-1 w-[211px]">
+            <input disabled={!emailConfirmed} onClick={handleCheck} type="checkbox" checked={items.check}/>
+            {
+              emailConfirmed ?
+              <label className="ml-2">Trust this device</label>
+              :
+              <label className="ml-2 text-amber/30">Trust this device</label>
+            }
+        </div>
         <button disabled={!emailConfirmed} onClick={handleSubmit} className="m-2 w-[211px] border-2 border-ochre rounded-lg bg-amber p-1 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-ochre/[.01] disabled:bg-ochre/50 disabled:active:shadow-none disabled:hover:shadow-none disabled:hover:scale-100">
           Create Account
         </button>

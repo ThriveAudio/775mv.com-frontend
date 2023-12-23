@@ -6,17 +6,10 @@ import { useRef, useReducer, useState } from "react"
 function loginReducer(items, action) {
   switch (action.type) {
     case "input":
-      if (action.field == "email") {
-        // TODO email validation
-        return {
-          ...items,
-          email: action.value
-        }
-      } else if (action.field == "password") {
-        return {
-          ...items,
-          password: action.value
-        }
+      // TODO email validation
+      return {
+        ...items,
+        [action.field]: action.value
       }
   }
 }
@@ -25,7 +18,8 @@ export default function LoginClient({redirect}) {
 
   const initialItems = {
     "email": "",
-    "password": ""
+    "password": "",
+    "check": false
   }
 
   const refs = {
@@ -46,6 +40,7 @@ export default function LoginClient({redirect}) {
   }
 
   function handleInputUpdate(field) {
+    console.log(refs[[field]].current.value)
     dispatch({
       "type": "input",
       "field": field,
@@ -78,7 +73,15 @@ export default function LoginClient({redirect}) {
       }
     }
   }
-  console.log(timer)
+
+  function handleCheck() {
+    dispatch({
+      "type": "input",
+      "field": "check",
+      "value": !items.check
+    })
+  }
+
   return (
     <>
       <div className="m-2 flex flex-col items-center text-2xl font-bold">
@@ -87,6 +90,10 @@ export default function LoginClient({redirect}) {
       <div className="mt-[200px] flex flex-col justify-center items-center">
         <input ref={refs.email} disabled={timer > 0} onInput={() => handleInputUpdate("email")} value={items['email']} placeholder="Email" autoComplete="email" className="m-2 w-[211px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:text-coolgraylight"/>
         <input ref={refs.password} disabled={timer > 0} onInput={() => handleInputUpdate("password")} value={items['password']} placeholder="Password" autoComplete="password" type="password" className="m-2 w-[211px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:text-coolgraylight"/>
+        <div className="m-1 w-[211px]">
+            <input onClick={handleCheck} type="checkbox" checked={items.check}/>
+            <label className="ml-2">Trust this device</label>
+        </div>
         <button onClick={handleSubmit} disabled={timer > 0} className="m-2 w-[211px] border-2 border-ochre rounded-lg bg-amber p-1 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none disabled:active:shadow-none">Login</button>
         {
           timer > 0 ?
