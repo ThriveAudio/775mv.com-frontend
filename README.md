@@ -13,10 +13,10 @@
 - [x] include shipping price in website
 - [ ] check cart counter BS
 - [ ] refresh router in cart (and account?)
-- [ ] login
+- [x] login
   - [x] disable button hovering on disabled login
-  - [ ] session expiration
-  - [ ] trusted device check
+  - [x] session expiration
+  - [x] trusted device check
 - [ ] pages
   - [ ] about
   - [ ] terms and conditions
