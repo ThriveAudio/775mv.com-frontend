@@ -154,8 +154,13 @@ export default function RootLayout({
       }
       setCart(amount)
     })
+
     fetch('/api/check-loggedin').then(e => e.json()).then(e => {
       setSessionState(e['result'] ? "loggedin" : "unknown")
+      if (e['result']) {
+        fetch('/api/keep-alive')
+        setInterval(() => {fetch('/api/keep-alive')}, 30000)
+      }
     })
     // fetch('/api/check-loggedin').then(e => {console.log(e.json())})
   }, [])

@@ -15,9 +15,6 @@ export async function middleware(request: NextRequest) {
     jsonRes = await res.json()
 
     response.cookies.set("sessionId", jsonRes['sessionId'], {sameSite: "none", secure: true})
-  } else {
-    const res = await request.cookies.get("sessionId")
-    const req = await fetch('http://127.0.0.1:8000/keep-alive', {"method": "post", "body": JSON.stringify(res)})
   }
   
   return response
