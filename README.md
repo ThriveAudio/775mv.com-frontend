@@ -19,6 +19,7 @@
   - [x] trusted device check
 - [x] auth
   - [x] take the trusted device check value from db on page load
+- [ ] password reset
 - [ ] pages
   - [ ] about
   - [ ] terms and conditions
