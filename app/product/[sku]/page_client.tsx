@@ -247,9 +247,9 @@ export default function ProductPage({ info }: { info: JSON }) { // TODO procedur
   }
 
   async function _addToCart() {
-    const res = await (await fetch('/api/add-to-cart', {"method": "post", "body": JSON.stringify({"sku": info['sku'], "amount": amount})})).json()
+    const res = await (await fetch('/api/add-to-cart', {"method": "post", "body": JSON.stringify({"sku": info['sku'], "amount": Number(amount)})})).json()
     console.log('server res: ', res)
-    setCart(cart+amount)
+    setCart(cart+Number(amount))
     // setNotif(true)
   }
 
