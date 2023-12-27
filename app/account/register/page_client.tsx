@@ -34,8 +34,10 @@ export default function RegisterClient({redirect}) {
   const [accountExists, setAccountExists] = useState(false)
   const [awaitingEmail, setAwaitingEmail] = useState(false)
   const [emailConfirmed, setEmailConfirmed] = useState(false)
+  const [highlightPasswordInfo, setHighlightPasswordInfo] = useState(false)
   const [pageBack, setPageBack] = useAtom(pageBackAtom)
   let emailIntervalRef = useRef(null)
+  let passwordInfo = <></>
 
   if (redirect) {
     router.push("/")
@@ -46,6 +48,10 @@ export default function RegisterClient({redirect}) {
     let classList = refs[[field]].current.className.split(" ")
     classList = classList.filter((item) => item != "!border-burgundy")
     refs[[field]].current.className = classList.join(" ")
+
+    if (field == "password") {
+      setHighlightPasswordInfo(false)
+    }
 
     dispatch({
       "type": "input",
@@ -64,6 +70,11 @@ export default function RegisterClient({redirect}) {
       router.back()
     } else if(res['result'] == "error") {
       setAccountExists(true)
+    } else if(res['result'] == "password") {
+      let classList = refs.password.current.className.split(" ")
+      classList.push("!border-burgundy")
+      refs.password.current.className = classList.join(" ")
+      setHighlightPasswordInfo(true)
     }
   }
 
@@ -108,6 +119,20 @@ export default function RegisterClient({redirect}) {
     })
   }
 
+  if (!emailConfirmed) {
+    passwordInfo = <p className='w-[211px] text-xs text-amber/30'>
+      The password must have at least 1 of upper and lower case letters, numbers, and special characters.
+    </p>
+  } else if (highlightPasswordInfo) {
+    passwordInfo = <p className='w-[211px] text-xs text-burgundy'>
+      The password must have at least 1 of upper and lower case letters, numbers, and special characters.
+    </p>
+  } else {
+    passwordInfo = <p className='w-[211px] text-xs'>
+      The password must have at least 1 of upper and lower case letters, numbers, and special characters.
+    </p>
+  } // password infi show
+
   return (
     <>
       <div className="m-2 flex flex-col items-center text-2xl font-bold">
@@ -130,6 +155,7 @@ export default function RegisterClient({redirect}) {
           </button>
         }
         <input disabled={!emailConfirmed} ref={refs.password} onInput={() => handleInputUpdate("password")} value={items['password']} placeholder="Password" autoComplete="password" type="password" className="m-2 w-[211px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:border-coolgraylight/30"/>
+        {passwordInfo}
         <div className="m-1 w-[211px]">
             <input disabled={!emailConfirmed} onClick={handleCheck} type="checkbox" checked={items.check}/>
             {
