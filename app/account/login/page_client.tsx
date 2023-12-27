@@ -16,12 +16,12 @@ function loginReducer(items, action) {
   }
 }
 
-export default function LoginClient({redirect}) {
+export default function LoginClient({redirect, trustedDevice}) {
 
   const initialItems = {
     "email": "",
     "password": "",
-    "check": false
+    "check": trustedDevice
   }
 
   const refs = {

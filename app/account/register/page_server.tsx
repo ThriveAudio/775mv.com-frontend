@@ -9,7 +9,10 @@ export default async function RegisterServer() {
   // if (resJson['result'] == true) {
   //   router.push("/")
   // }
+  const trustedCheckReq = await fetch('http://127.0.0.1:8000/trusted-check', {"method": "post", "body": JSON.stringify({'sessionId': session})})
+  //const res = await fetch('http://127.0.0.1:3000/api/cart')
+  const trustedCheckResJson = await trustedCheckReq.json()
   return (
-    <RegisterClient redirect={resJson['result']}/>
+    <RegisterClient redirect={resJson['result']} trustedDevice={trustedCheckResJson}/>
   )
 }

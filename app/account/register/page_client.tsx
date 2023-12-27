@@ -16,12 +16,12 @@ function registerReducer(items, action) {
   }
 }
 
-export default function RegisterClient({redirect}) {
+export default function RegisterClient({redirect, trustedDevice}) {
 
   const initialItems = {
     "email": "",
     "password": "",
-    "check": false
+    "check": trustedDevice
   }
 
   const refs = {
