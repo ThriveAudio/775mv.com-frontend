@@ -135,7 +135,7 @@ function Footer() {
   return (
     <div className='static bottom-0 left-0 right-0 text-amber border-t border-t-ochre'>
       <div className='flex flex-row justify-center p-3'>
-        <p>Copyright © {year} 775mv All Rights Reserved.</p>
+        <p>Copyright © 2014-{year} Thrive Audio LLC, <Link href="https://775mv.com" className='underline'>775mv.com</Link>. All Rights Reserved.</p>
         <p className='px-2'>|</p>
         <Link href="/terms-and-conditions" className='pr-2 underline'>Term & Conditions</Link>
         <Link href="/privacy-policy" className='underline'>Privacy Policy</Link>
