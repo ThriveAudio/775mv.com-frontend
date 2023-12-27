@@ -11,8 +11,8 @@
   - [x] confirmation on settings page
   - [x] set email to active email on confirmation
 - [x] include shipping price in website
-- [ ] check cart counter BS
-- [ ] refresh router in cart (and account?)
+- [x] check cart counter BS
+- [x] refresh router in cart (and account?)
 - [x] login
   - [x] disable button hovering on disabled login
   - [x] session expiration
@@ -24,6 +24,6 @@
 - [ ] paypal
 - [ ] desktop & mobile friendly css
 - [ ] loading indicator when waiting for http response
-- [ ] 404 page
+- [x] 404 page
 - [ ] input field css & js
 - [ ] order edit shipping information
