@@ -17,8 +17,8 @@
   - [x] disable button hovering on disabled login
   - [x] session expiration
   - [x] trusted device check
-- [ ] auth
-  - [ ] take the trusted device check value from db on page load
+- [x] auth
+  - [x] take the trusted device check value from db on page load
 - [ ] pages
   - [ ] about
   - [ ] terms and conditions
