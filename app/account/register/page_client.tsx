@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { useRef, useReducer, useState } from "react"
+import { useAtom } from 'jotai'
+import { pageBackAtom } from '../../../utils/atoms'
 
 function registerReducer(items, action) {
   switch (action.type) {
@@ -32,6 +34,7 @@ export default function RegisterClient({redirect}) {
   const [accountExists, setAccountExists] = useState(false)
   const [awaitingEmail, setAwaitingEmail] = useState(false)
   const [emailConfirmed, setEmailConfirmed] = useState(false)
+  const [pageBack, setPageBack] = useAtom(pageBackAtom)
   let emailIntervalRef = useRef(null)
 
   if (redirect) {
@@ -57,6 +60,7 @@ export default function RegisterClient({redirect}) {
     })})).json()
 
     if (res['result'] == "redirect") {
+      setPageBack(true)
       router.back()
     } else if(res['result'] == "error") {
       setAccountExists(true)

@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { useRef, useReducer, useState } from "react"
+import { useAtom } from 'jotai'
+import { pageBackAtom } from '../../../utils/atoms'
 
 function loginReducer(items, action) {
   switch (action.type) {
@@ -34,6 +36,7 @@ export default function LoginClient({redirect}) {
   const [timer, setTimer] = useState(0)
   const intervalRef = useRef(null)
   const [wrongLogin, setWrongLogin] = useState(false)
+  const [pageBack, setPageBack] = useAtom(pageBackAtom)
 
   if (redirect) {
     router.push("/")
@@ -58,6 +61,7 @@ export default function LoginClient({redirect}) {
     console.log(slice)
 
     if (slice[0] == "redirect") {
+      setPageBack(true)
       router.back()
     } else if(slice[0] == "error") {
       if (slice[1] == "-1") {
