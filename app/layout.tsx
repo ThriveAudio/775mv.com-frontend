@@ -4,12 +4,12 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useRef, useState, CSSProperties, useEffect } from 'react'
 import { Url } from 'next/dist/shared/lib/router/router'
 import { transform } from 'typescript'
 import { useAtom } from 'jotai'
-import { cartAtom, sessionAtom } from './../utils/atoms'
+import { cartAtom, sessionAtom, pageBackAtom } from './../utils/atoms'
 import cartIcon from './../public/cart.png'
 import pfpIcon from './../public/pfp.png'
 import Image from 'next/image'
@@ -23,17 +23,18 @@ const inter = Inter({ subsets: ['latin'] })
 // }
 
 function NavBar({ children, cartAmount }: { children: React.ReactNode, cartAmount: number }) {
+  // "a" html tag as work around to router caching which renders the cart information stale
   return (
     <nav className='sticky z-50 top-0 left-0 right-0 shadow border-b-2 bg-coolgraydark border-b-coolgraylight text-amber font-bold'>
       <div className='relative mx-auto w-[1280px] flex flex-row justify-center items-center'>
         {children}
-        <Link href={'/account/cart'} className='interactable group absolute right-[31px]'>
+        <a href={'/account/cart'} className='interactable group absolute right-[31px]'>
           <div className='relative px-[8px] py-[11px]'>
             <Image src={cartIcon} width={20} height={10} alt={"cart icon"} />
             {cartAmount > 0 ? <span className='absolute bottom-1 right-0 px-1 rounded-xl bg-lightaccentbg text-sm text-coolgraydark'>{cartAmount}</span> : <span />}
             <span className='absolute h-0.5 w-0 -mb-0.5 group-hover:w-full transition-all duration-125 bottom-0 inset-x-1/2 group-hover:left-0 bg-black dark:bg-ochre' />
           </div>
-        </Link>
+        </a>
         <Link href={'/account/data'} className='interactable group absolute right-0'>
           <div className='px-[8px] py-[10.5px]'>
             <Image src={pfpIcon} width={15} height={7} alt={"pfp icon"} />
@@ -87,7 +88,7 @@ function NavMenu({ children, value, expanded, toggle }: { children: React.ReactN
   )
 }
 
-function NavMenuButton({ children, href, toggle, expanded }: { children: React.ReactNode, href: Url, expanded: boolean }) {
+function NavMenuButton({ children, href, toggle, expanded, onClick }: { children: React.ReactNode, href: Url, expanded: boolean }) {
 
   let linkClass = ""
 
@@ -97,13 +98,26 @@ function NavMenuButton({ children, href, toggle, expanded }: { children: React.R
     linkClass = "group relative px-2 py-2 invisible"
   }
 
-  return (
-    <Link onClick={toggle} href={href} className={linkClass}>
-      {/* <span className='absolute h-0 w-0.5 -ml-0.5 group-hover:h-full left-0 inset-y-1/2 group-hover:top-0 bg-amber'></span> */}
-      {children}
-      {/* <span className='absolute h-0 w-0.5 -mr-0.5 group-hover:h-full right-0 inset-y-1/2 group-hover:top-0 bg-amber'></span> */}
-    </Link>
-  );
+  const cartPage = href == "/account/cart"
+
+  // "a" html tag as work around to router caching which renders the cart information stale
+  if (href == "/account/cart") {
+    return (
+      <a onClick={() => {toggle()}} href={href} className={linkClass}>
+        {/* <span className='absolute h-0 w-0.5 -ml-0.5 group-hover:h-full left-0 inset-y-1/2 group-hover:top-0 bg-amber'></span> */}
+        {children}
+        {/* <span className='absolute h-0 w-0.5 -mr-0.5 group-hover:h-full right-0 inset-y-1/2 group-hover:top-0 bg-amber'></span> */}
+      </a>
+    );
+  } else {
+    return (
+      <Link onClick={() => {toggle()}} href={href} className={linkClass}>
+        {/* <span className='absolute h-0 w-0.5 -ml-0.5 group-hover:h-full left-0 inset-y-1/2 group-hover:top-0 bg-amber'></span> */}
+        {children}
+        {/* <span className='absolute h-0 w-0.5 -mr-0.5 group-hover:h-full right-0 inset-y-1/2 group-hover:top-0 bg-amber'></span> */}
+      </Link>
+    );
+  }
 }
 
 function Body({ children }: { children: React.ReactNode }) {
@@ -138,9 +152,11 @@ export default function RootLayout({
 
   const [cart, setCart] = useAtom(cartAtom)
   const [sessionState, setSessionState] = useAtom(sessionAtom)
+  const [pageBack, setPageBack] = useAtom(pageBackAtom)
   let sessionJSX = <></>
 
   const [expanded, setExpanded] = useState(false);
+  const router = useRouter()
 
   function toggle() {
     setExpanded(!expanded)
@@ -171,6 +187,11 @@ export default function RootLayout({
 
   //const mouse = document.getElementById('mouse');
   //console.log(mouse)
+  if (pageBack) {
+    console.log("GOT HERE")
+    setPageBack(false)
+    location.reload()
+  }
 
   function handleMouseMove(e) {
     //console.log(e.target.closest(".interactable"))
@@ -204,7 +225,7 @@ export default function RootLayout({
           <NavButton href={'/products'} expanded={expanded} toggle={toggle}>Products</NavButton>
           <NavButton href={'/about'} expanded={expanded} toggle={toggle}>About</NavButton>
           <NavMenu value='Account' toggle={toggle} expanded={expanded}>
-            <NavMenuButton href={'/account/cart'}>Cart</NavMenuButton>
+            <NavMenuButton href={'/account/cart'} >Cart</NavMenuButton>
             <NavMenuButton href={'/account/orders'}>Orders</NavMenuButton>
             <NavMenuButton href={'/account/settings'}>Settings</NavMenuButton>
             {
