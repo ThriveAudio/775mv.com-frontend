@@ -35,7 +35,7 @@ function NavBar({ children, cartAmount }: { children: React.ReactNode, cartAmoun
             <span className='absolute h-0.5 w-0 -mb-0.5 group-hover:w-full transition-all duration-125 bottom-0 inset-x-1/2 group-hover:left-0 bg-black dark:bg-ochre' />
           </div>
         </a>
-        <Link href={'/account/data'} className='interactable group absolute right-0'>
+        <Link href={'/account/settings'} className='interactable group absolute right-0'>
           <div className='px-[8px] py-[10.5px]'>
             <Image src={pfpIcon} width={15} height={7} alt={"pfp icon"} />
             <span className='absolute h-0.5 w-0 -mb-0.5 group-hover:w-full transition-all duration-125 bottom-0 inset-x-1/2 group-hover:left-0 bg-black dark:bg-ochre' />
