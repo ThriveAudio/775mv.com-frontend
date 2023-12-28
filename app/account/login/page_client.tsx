@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useRef, useReducer, useState } from "react"
 import { useAtom } from 'jotai'
 import { pageBackAtom } from '../../../utils/atoms'
+import Link from 'next/link'
 
 function loginReducer(items, action) {
   switch (action.type) {
@@ -99,6 +100,7 @@ export default function LoginClient({redirect, trustedDevice}) {
             <label className="ml-2">Trust this device</label>
         </div>
         <button onClick={handleSubmit} disabled={timer > 0} className="m-2 w-[211px] border-2 border-ochre rounded-lg bg-amber p-1 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none disabled:active:shadow-none">Login</button>
+        <Link className='underline' href="/account/reset-password">Reset Password</Link>
         {
           timer > 0 ?
           <div className='flex flex-col items-center'>
