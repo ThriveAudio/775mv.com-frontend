@@ -19,7 +19,7 @@
   - [x] trusted device check
 - [x] auth
   - [x] take the trusted device check value from db on page load
-- [ ] password reset
+- [x] password reset
 - [ ] captcha on login & register
 - [ ] pages
   - [ ] about
