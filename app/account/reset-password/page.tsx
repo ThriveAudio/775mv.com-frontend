@@ -33,8 +33,6 @@ export default function Page() {
       let classList = emailRef.current.className.split(" ")
       classList.push("!border-burgundy")
       emailRef.current.className = classList.join(" ")
-    } else if (res['result'] == "not found") {
-      setNotFound(true)
     } else if (res['result'] == "success") {
       setSuccess(true)
     }
@@ -47,10 +45,8 @@ export default function Page() {
         <input ref={emailRef} onInput={handleInput} value={email} placeholder="Email" autoComplete="email" className="mt-2 mb-2 border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:text-coolgraylight"/>
         { invalid ? <p>Please enter a valid email address.</p> : <></>}
         <button onClick={handleSubmit} className="mt-2 border-2 border-ochre rounded-lg bg-amber p-1 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none disabled:active:shadow-none">Send Email</button>
-        { success ? <span className="transition-all duration-500 self-center mt-4 h-[3.5px] w-[211px] bg-viridian rounded"/> : <span className="transition-all duration-500 self-center mt-4 h-[3.5px] w-[0px] bg-viridian rounded"/> }
-        { success ? <p className="transition-all duration-500 self-center mt-2 text-viridian font-bold overflow-hidden h-[20px]">Email Sent!</p> : <p className="transition-all duration-500 self-center mt-2 text-viridian font-bold overflow-hidden h-[0px]">Email Sent!</p> }
       </div>
-      { notFound ? <p className="mt-4 w-[648px] text-center">Something went wrong. We're sorry for the inconvienience. If you're still having trouble, please <Link className="underline" href="/contact">contact support</Link>.</p> : <p></p> }
+      { success ? <p className="mt-4 w-[648px] text-center">We will send an email if it has an account.</p> : <p></p> }
     </div>
   )
 }

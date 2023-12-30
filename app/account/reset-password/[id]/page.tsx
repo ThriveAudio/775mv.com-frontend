@@ -52,7 +52,7 @@ export default function Page({ params }: { params: { id: string } }) {
         { success ? <span className="transition-all duration-500 self-center mt-4 h-[3.5px] w-[211px] bg-viridian rounded"/> : <span className="transition-all duration-500 self-center mt-4 h-[3.5px] w-[0px] bg-viridian rounded"/> }
         { success ? <p className="transition-all duration-500 self-center mt-2 text-viridian font-bold overflow-hidden h-[20px]">Password Reset!</p> : <p className="transition-all duration-500 self-center mt-2 text-viridian font-bold overflow-hidden h-[0px]">Email Sent!</p> }
       </div>
-      { error ? <p>Something went wrong. We're sorry for the inconvienience. If you're still having trouble, please <Link className="underline" href="/contact">contact support</Link>.</p> : <></> }
+      { error ? <p>Something went wrong. We're sorry for the inconvienience. If you're having trouble, please <Link className="underline" href="/contact">contact support</Link>.</p> : <></> }
     </div>
   )
 }
