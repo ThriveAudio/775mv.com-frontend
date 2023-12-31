@@ -47,7 +47,7 @@ function Product({product = {}, image = ""}: {product: Object, image: String}) {
           <Image src={product['image']} width={300} height={200} alt={product['name']}></Image>
           {/* <div className='w-[300px] h-[200px] group-hover:scale-110 transition'></div> */}
         </div>
-        <div className='mt-3 text-xl text-amber group-hover:underline underline-offset-2 decoration-[1.5px]'>{product['name']}</div>
+        <div className='mt-3 text-xl text-amber text-center group-hover:underline underline-offset-2 decoration-[1.5px]'>{product['name']}</div>
         <div className='mt-3 text-xl font-semibold'>${product['price']}</div>
       </Link>
     )

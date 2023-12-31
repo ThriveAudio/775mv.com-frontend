@@ -12,7 +12,7 @@ import { cartAtom } from './../../../utils/atoms'
 function MainImage({ source, name, previousImg, nextImg }: { source: StaticImport, name: string, previousImg: MouseEventHandler<HTMLDivElement>, nextImg: MouseEventHandler<HTMLDivElement> }) {
   return (
     <div onClick={() => { console.log("clicked") }} className="group relative max-w-fit text-white rounded-lg overflow-hidden border-2 border-coolgraylight">
-      <Image src={source} width={500} height={300} alt={name} />
+      <Image src={source} width={500} height={300} alt={name} className='w-[500px] h-[300px]' />
       <div onClick={previousImg} className='interactable absolute left-3 top-[110px] w-[60px] h-[60px] bg-white/[.15] rounded-lg hover:bg-white/[.25] active:scale-[90%] opacity-0 group-hover:opacity-100 transition'>
         <Image src={LeftChevron} width={20} height={20} alt="left chevron" className='absolute left-[19px] top-[11.5px] select-none' />
         {/* <div className='absolute left-[26px] top-[27px] w-[2px] h-[20px] rounded origin-center -rotate-45 bg-white'/>
@@ -85,13 +85,13 @@ function Information({ info, amount, addAmount, subtractAmount, updateAmount, on
       <div className='self-left font-bold text-4xl'>{info['name']}</div>
       <div className='text-wrap mt-4'><ReactMarkdown>{info['description']}</ReactMarkdown></div>
 
-      <div className='absolute bottom-[174px] right-0'>
+      <div className='absolute bottom-[159px] right-0'>
         <button onClick={subtractAmount} onMouseDown={subtractHold} onMouseUp={subtractUnhold} className='interactable h-[44px] w-[30px] bg-coolgraydark border-l-2 border-t-2 border-b-2 border-coolgraylight rounded-l-lg active:scale-[95%]'>-</button>
         <input onBlur={onLostFocus} onChange={updateAmount} value={amount} ref={amountRef} className='interactable text-center bg-coolgraydark border-2 border-coolgraylight w-[50px] h-[44px] py-3 active:outline-none focus:outline-none'/>
         <button onClick={addAmount} onMouseDown={addHold} onMouseUp={addUnhold} className='interactable h-[44px] w-[30px] bg-coolgraydark border-r-2 border-t-2 border-b-2 border-coolgraylight rounded-r-lg active:scale-[95%]'>+</button>
       </div>
 
-      <button onClick={addToCart} className='interactable absolute bottom-[119px] right-0 p-2 text-coolgraydark font-bold bg-amber rounded-lg hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]'>Add To Cart</button>
+      <button onClick={addToCart} className='interactable absolute bottom-[104px] right-0 p-2 text-coolgraydark font-bold bg-amber rounded-lg hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]'>Add To Cart</button>
     </div>
   )
 }
@@ -157,21 +157,23 @@ function BigInformation({desc, specs}) {
   )
 }
 
-// function CartNotif({show}: {show: Boolean}) {
-//   if (show) {
-//     return (
-//       <div className='fixed bottom-10 left-1/2 -translate-x-1/2 p-[8px] bg-amber border-2 border-ochre rounded-lg w-[300px] h-[70px] flex justify-center items-center text-coolgraydark font-bold'>
-//         Added To Cart!
-//       </div>
-//     )
-//   } else {
-//     return (
-//       <div className='fixed -bottom-10 left-1/2 -translate-x-1/2 p-[8px] bg-amber border-2 border-ochre rounded-lg w-[300px] h-[70px] flex justify-center items-center text-coolgraydark font-bold'>
-//         Added To Cart!
-//       </div>
-//     )
-//   }
-// }
+function CartNotif({show}: {show: Boolean}) {
+  if (show) {
+    console.log("showing notif") //  shadow-[0_0px_30px_-15px_rgba(255,160,25,1),inset_0_0px_25px_-15px_rgba(255,160,25,1)]
+    return (
+      <div className='transition-all ease-out duration-300 fixed bottom-20 left-1/2 -translate-x-1/2 p-[8px] bg-coolgraydark/[.85] border-[1px] border-amber rounded-lg w-[300px] h-[70px] flex justify-center items-center text-amber font-bold'>
+        Added To Cart!
+      </div>
+    )
+  } else {
+    console.log("hiding notif")
+    return (
+      <div className='transition-all ease-in duration-300 fixed -bottom-20 left-1/2 -translate-x-1/2 p-[8px] bg-coolgraydark/[.85] border-[1px] border-amber rounded-lg w-[300px] h-[70px] flex justify-center items-center text-amber font-bold'>
+        Added To Cart!
+      </div>
+    )
+  }
+}
 
 
 export default function ProductPage({ info }: { info: JSON }) { // TODO procedurally load higher quality images
@@ -184,7 +186,7 @@ export default function ProductPage({ info }: { info: JSON }) { // TODO procedur
   const [amount, setAmount] = useState(1)
   const amountRef = useRef(null)
 
-  // const [notif, setNotif] = useState(false)
+  const [notif, setNotif] = useState(false)
 
 
   function previousImg() {
@@ -248,27 +250,26 @@ export default function ProductPage({ info }: { info: JSON }) { // TODO procedur
 
   async function _addToCart() {
     const res = await (await fetch('/api/add-to-cart', {"method": "post", "body": JSON.stringify({"sku": info['sku'], "amount": Number(amount)})})).json()
-    console.log('server res: ', res)
+    // console.log('server res: ', res)
     setCart(cart+Number(amount))
-    // setNotif(true)
+    setNotif(true)
   }
 
-  // useEffect(() => {
-  //   if (notif) {
-  //     const timer = setTimeout(() => {
-  //       setNotif(false)
-  //     }, 1000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, []);
-  // TODO fix cart counter BS
+  
+  if (notif) {
+    const timer = setTimeout(() => {
+      setNotif(false)
+      // clearTimeout(timer)
+    }, 2000);
+  }
+  
   return (
-    <div className='relative grid grid-cols-2 grid-rows-[431px_auto]'>
+    <div className='relative grid grid-cols-2 grid-rows-[460px_auto]'>
       <ImageSection info={info} prevImg={previousImg} nextImg={nextImg} imgIndex={imgIndex} setIndex={userSetIndex} imgRefs={imgRefs} />
       <Information info={info} amount={amount} addAmount={addAmount} subtractAmount={subtractAmount} updateAmount={updateAmount} onLostFocus={onLostFocus} amountRef={amountRef} addToCart={_addToCart}/>
 
       <BigInformation desc={info['desc']} specs={info['specs']}/>
-      {/* <CartNotif show={notif}/> */}
+      <CartNotif show={notif}/>
     </div>
   )
 }
