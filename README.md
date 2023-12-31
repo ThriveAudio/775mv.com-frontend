@@ -20,7 +20,6 @@
 - [x] auth
   - [x] take the trusted device check value from db on page load
 - [x] password reset
-- [ ] captcha on login & register
 - [ ] pages
   - [ ] about
   - [ ] terms and conditions
