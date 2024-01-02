@@ -25,6 +25,7 @@
   - [ ] terms and conditions
   - [ ] privacy policy
 - [ ] paypal
+- [ ] menu icons (option to turn off text?)
 - [ ] desktop & mobile friendly css
 - [ ] loading indicator when waiting for http response
 - [x] 404 page
