@@ -32,4 +32,4 @@
 - [ ] input field css & js
 - [ ] order edit shipping information
 - [x] include old password in password update form
-- [ ] add phone number to checkout form
+- [x] add phone number to checkout form
