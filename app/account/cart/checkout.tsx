@@ -900,6 +900,7 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
           :
           <></>
           }
+          {/* TODO phone number explanation text */}
           <input disabled={!emailConfirmed} ref={refs.shipping.phone} onInput={() => {handleInput("shipping phone")}} value={items.shipping['phone']} placeholder="Phone Number" autoComplete="tel" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
           <input disabled={!emailConfirmed} ref={refs.shipping.address1} onInput={() => {handleInput("shipping address1")}} value={items.shipping['address1']} placeholder="Street Address" autoComplete="address-line1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
           <input disabled={!emailConfirmed} ref={refs.shipping.address2} onInput={() => {handleInput("shipping address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
