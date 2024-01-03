@@ -20,11 +20,13 @@ export default function PageClient({initialItems}) {
   const [items, dispatch] = useReducer(settingsReducer, initialItems);
   const [awaitingEmail, setAwaitingEmail] = useState(false)
   const [emailConfirmed, setEmailConfirmed] = useState(true)
+  const [passwordError, setPasswordError] = useState(false)
   let emailIntervalRef = useRef(null)
   const router = useRouter()
   const refs = {
     "email": useRef(null),
-    "password": useRef(null)
+    "oldpassword": useRef(null),
+    "newpassword": useRef(null)
   }
 
   function handleInput(field) {
@@ -37,6 +39,10 @@ export default function PageClient({initialItems}) {
     let classList = refs[[field]].current.className.split(" ")
     classList = classList.filter((item) => item != "!border-burgundy")
     refs[[field]].current.className = classList.join(" ")
+
+    if (field == "oldpassword" || field == "newpassword") {
+      setPasswordError(false)
+    }
   }
 
   // TODO password & email validation
@@ -112,19 +118,31 @@ export default function PageClient({initialItems}) {
     })})).json()
 
     switch (res['result']) {
-      case "success":
+      case "success": {
         dispatch({
           "type": "input",
-          "field": "password",
+          "field": "oldpassword",
+          "value": ""
+        })
+        dispatch({
+          "type": "input",
+          "field": "newpassword",
           "value": ""
         })
         router.refresh()
         break;
+      }
 
-      case "error":
-        let classList = refs.password.current.className.split(" ")
+      case "error": {
+        let classList = refs.oldpassword.current.className.split(" ")
         classList.push("!border-burgundy")
-        refs.password.current.className = classList.join(" ")
+        refs.oldpassword.current.className = classList.join(" ")
+        classList = refs.newpassword.current.className.split(" ")
+        classList.push("!border-burgundy")
+        refs.newpassword.current.className = classList.join(" ")
+        setPasswordError(true)
+        break;
+      }
     
       default:
         break;
@@ -174,12 +192,24 @@ export default function PageClient({initialItems}) {
             <></>
           }
 
-          <p className="ml-10 mt-5">
-            Password
-          </p>
-          <div>
-            <input ref={refs['password']} onInput={() => handleInput("password")} value={items['password']} autoComplete="password" type="password" className="ml-10 w-[300px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <button onClick={handleSavePassword} disabled={(items['password'] == "")} className="ml-4 px-2 py-1 min-w-[130px] border-2 border-ochre rounded-lg bg-amber text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none">
+          <div className="flex flex-col w-[340px]">
+            <p className="ml-10 mt-5">
+              Password
+            </p>
+            <input ref={refs['oldpassword']} onInput={() => handleInput("oldpassword")} value={items['oldpassword']} placeholder="Current Password" autoComplete="password" type="password" className="ml-10 w-[300px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <input ref={refs['newpassword']} onInput={() => handleInput("newpassword")} value={items['newpassword']} placeholder="New Password" type="password" className="ml-10 mt-2 w-[300px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
+            <p className="ml-10 mt-2 text-xs">
+              The password must have at least 1 of upper and lower case letters, numbers, and special characters.
+            </p>
+            {
+              passwordError ?
+              <p className="ml-10 mt-2 text-xs text-burgundy">
+                Something went wrong, please check that the current password is correct and the new password complies with all the requirements listed above.
+              </p>
+              :
+              <p></p>
+            }
+            <button onClick={handleSavePassword} disabled={!(items['oldpassword'] != "" && items['newpassword'] != "")} className="self-end mt-2 px-2 py-1 w-[130px] border-2 border-ochre rounded-lg bg-amber text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none">
               Save Pass
             </button>
           </div>
