@@ -31,4 +31,4 @@
 - [x] 404 page
 - [ ] input field css & js
 - [ ] order edit shipping information
-- [ ] include old password in password update form
+- [x] include old password in password update form
