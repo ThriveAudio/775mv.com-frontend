@@ -174,23 +174,23 @@ export default function PageClient({initialItems}) {
           </p>
         </div>
         <div className="flex flex-col">
-          <p className="ml-10 mt-10">
-            Email
-          </p>
-          <div className="flex flex-row">
+          <div className="flex flex-col w-[340px]">
+            <p className="ml-10 mt-10">
+              Email
+            </p>
             <input ref={refs['email']} onInput={() => handleInput("email")} value={items['email']} autoComplete="email" className="ml-10 w-[300px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline"/>
-            <button onClick={handleConfirmEmail} disabled={(initialItems['email'] == items['email'])} className="ml-4 px-2 py-1 min-w-[130px] border-2 border-ochre rounded-lg bg-amber text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none">
+            <button onClick={handleConfirmEmail} disabled={(initialItems['email'] == items['email'])} className="self-end ml-4 mt-2 px-2 py-1 w-[130px] border-2 border-ochre rounded-lg bg-amber text-coolgraydark font-bold hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none">
               Save Email
             </button>
+            {
+              awaitingEmail ?
+              <p className="ml-10 mt-2 text-sm">
+                We sent you a confirmation email. Please check your inbox.
+              </p>
+              :
+              <></>
+            }
           </div>
-          {
-            awaitingEmail ?
-            <p className="ml-10 mt-2 text-sm">
-              We sent you a confirmation email. Please check your inbox.
-            </p>
-            :
-            <></>
-          }
 
           <div className="flex flex-col w-[340px]">
             <p className="ml-10 mt-5">
