@@ -33,3 +33,4 @@
 - [ ] order edit shipping information
 - [x] include old password in password update form
 - [x] add phone number to checkout form
+- [ ] on checkout, on confirm email, check for existing account first
