@@ -450,7 +450,7 @@ function Expandable({children, title, state, handleExpansion, expansionType}) {
   switch (state) {
     case "open":
       return (
-        <div className="transition-all ease-in duration-150 m-2 flex flex-col max-h-[600px] border-coolgraylight border-2 rounded-lg overflow-hidden">
+        <div className="transition-all ease-in duration-150 m-2 flex flex-col max-h-[610px] border-coolgraylight border-2 rounded-lg overflow-hidden">
           <button onClick={handleClick} className="relative flex">
             <div className="transition-all absolute w-[20px] h-[20px] left-2 inset-y-1/2 -translate-y-1/2 rotate-90">
               <div className="relative w-[20px] h-[20px]">
@@ -514,7 +514,7 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
       "city": "",
       "state": "",
       "zip": "",
-      "country": "",
+      "country": "US",
     },
     "billing": {
       "same_as_shipping": false,
@@ -781,6 +781,64 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
     )
   })
 
+  const states = [{code: 'AL', name: "Alabama"},
+  {code: 'AK', name: "Alaska"},
+  {code: 'AZ', name: "Arizona"},
+  {code: 'AR', name: "Arkansas"},
+  {code: 'CA', name: "California"},
+  {code: 'CO', name: "Colorado"},
+  {code: 'CT', name: "Connecticut"},
+  {code: 'DE', name: "Deleware"},
+  {code: 'FL', name: "Florida"},
+  {code: 'GA', name: "Georgia"},
+  {code: 'HI', name: "Hawaii"},
+  {code: 'ID', name: "Idaho"},
+  {code: 'IL', name: "Illinois"},
+  {code: 'IN', name: "Indiana"},
+  {code: 'IA', name: "Iowa"},
+  {code: 'KS', name: "Kansas"},
+  {code: 'KY', name: "Kentucky"},
+  {code: 'LA', name: "Louisiana"},
+  {code: 'ME', name: "Maine"},
+  {code: 'MD', name: "Maryland"},
+  {code: 'MA', name: "Massachusetts"},
+  {code: 'MI', name: "Michigan"},
+  {code: 'MN', name: "Minnesota"},
+  {code: 'MS', name: "Mississippi"},
+  {code: 'MO', name: "Missouri"},
+  {code: 'MT', name: "Montana"},
+  {code: 'NC', name: "North Carolina"},
+  {code: 'ND', name: "North Dakota"},
+  {code: 'NE', name: "Nebraska"},
+  {code: 'NV', name: "Nevada"},
+  {code: 'NH', name: "New Hampshire"},
+  {code: 'NJ', name: "New Jersey"},
+  {code: 'NM', name: "New Mexico"},
+  {code: 'NY', name: "New York"},
+  {code: 'OH', name: "Ohio"},
+  {code: 'OK', name: "Oklahoma"},
+  {code: 'OR', name: "Oregon"},
+  {code: 'PA', name: "Pennsylvania"},
+  {code: 'PR', name: "Puerto Rico"},
+  {code: 'RI', name: "Rhode Island"},
+  {code: 'SC', name: "South Carolina"},
+  {code: 'SD', name: "South Dakota"},
+  {code: 'TN', name: "Tennessee"},
+  {code: 'TX', name: "Texas"},
+  {code: 'TX', name: "Texas"},
+  {code: 'UT', name: "Utah"},
+  {code: 'VT', name: "Vermont"},
+  {code: 'VA', name: "Virgina"},
+  {code: 'DC', name: "Washington DC"},
+  {code: 'WA', name: "Washington"},
+  {code: 'WV', name: "West Virginia"},
+  {code: 'WI', name: "Wisconsin"},
+  {code: 'WY', name: "Wyoming"}].map((item) => {
+    return (
+      <option value={item['code']}>{item['code']} ({item['name']})</option>
+    )
+  })
+
   function handleExpansion(str) {
     if (items['section-state'][str] == "closed") {
       dispatch({
@@ -797,12 +855,46 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
     }
   }
 
-  function createOrder() {
-
+  function createOrder(data, actions) {
+    // const res = fetch("/api/paypal-create-order").then((e)=>e.json()).then((e=>String(e)))
+    // console.log("res:", res)
+    // return res
+    return actions.order.create({
+      application_context: {
+        brand_name: "Thrive Audio LLC",
+        locale: 'us-US',
+        shipping_preference: 'SET_PROVIDED_ADDRESS'
+      },
+      purchase_units: [
+        {
+          amount: {
+            value: "0.01",
+          },
+          shipping: {
+            name: {
+              full_name: items.shipping.first_name + " " + items.shipping.last_name
+            },
+            address: {
+              address_line_1: items.shipping.address1,
+              address_line_2: items.shipping.address2,
+              admin_area_1: items.shipping.state,
+              admin_area_2: items.shipping.city,
+              postal_code: items.shipping.zip,
+              country_code: items.shipping.country,
+            }
+          }
+        },
+      ],
+    });
   }
 
-  function onApprove() {
+  function onApprove(data, actions) {
+    // return fetch("/api/paypal-approve-order").then((e)=>e.json())
+    return actions.order.capture().then(
+      fetch("/api/paypal-approve-order", {'method': "post", "body": JSON.stringify({'data': items, 'paypal': data})}).then((e)=>e.json()).then((e => {
 
+      }))
+    )
   }
 
   function indicateError(section, field) {
@@ -890,7 +982,7 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
             </button>
           </div>
           <p className="text-sm ml-3 mb-2 -mt-1">
-            We need the email to communicate order details.
+            We will use the email to communicate order details.
           </p>
           {
             awaitingEmail ?
@@ -906,10 +998,14 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
           <input disabled={!emailConfirmed} ref={refs.shipping.address2} onInput={() => {handleInput("shipping address2")}} value={items.shipping['address2']} placeholder="Apartment, suite, unit, etc." autoComplete="address-line2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
           <input disabled={!emailConfirmed} ref={refs.shipping.city} onInput={() => {handleInput("shipping city")}} value={items.shipping['city']} placeholder="City/Town" autoComplete="address-level2" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
           <input disabled={!emailConfirmed} ref={refs.shipping.zip} onInput={() => {handleInput("shipping zip")}} value={items.shipping['zip']} placeholder="Postal/ZIP code" autoComplete="postal-code" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
-          <input disabled={!emailConfirmed} ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
-          <select disabled={!emailConfirmed} ref={refs.shipping.country} onChange={()=>(handleCountry("shipping"))} value={items.shipping.country} autoComplete="country" className='m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30'>
-            {countries}
+          <select disabled={!emailConfirmed} ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30">
+            {states}
           </select>
+          {/* <input disabled={!emailConfirmed} ref={refs.shipping.state} onInput={() => {handleInput("shipping state")}} value={items.shipping['state']} placeholder="State" autoComplete="address-level1" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/> */}
+          <p className="ml-3 mb-2">Country: US</p>
+          {/* <select disabled={!emailConfirmed} ref={refs.shipping.country} onChange={()=>(handleCountry("shipping"))} value={items.shipping.country} autoComplete="country" className='m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30'>
+            {countries}
+          </select> */}
           <p className="ml-3 mb-2">
             Shipping price: ${shippingPrice}
           </p>
@@ -992,8 +1088,10 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
             :
             <div className="relative mx-auto m-2 w-[500px]">
               <span className="absolute w-[125px] h-[25px] bg-lightbg bottom-3.5 left-1/2 -translate-x-1/2 rounded"/>
-              <PayPalScriptProvider options={{clientId: "test", components: 'buttons'}}>
-                <PayPalButtons style={{layout: "vertical"}} createOrder={createOrder} onApprove={onApprove}/>
+              {/* <PayPalScriptProvider options={{clientId: "sb", intent: "capture", components: 'buttons'}}> */}
+              <PayPalScriptProvider options={{clientId: "test", currency: "USD", intent: "capture"}}>
+                <PayPalButtons createOrder={createOrder} onApprove={onApprove}/>
+                {/* <PayPalButtons/> */}
               </PayPalScriptProvider>
             </div>
           }
