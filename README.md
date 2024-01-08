@@ -25,6 +25,8 @@
   - [ ] terms and conditions
   - [ ] privacy policy
 - [ ] paypal
+  - [x] integrate
+  - [ ] get proper price
 - [ ] menu icons (option to turn off text?)
 - [ ] desktop & mobile friendly css
 - [ ] loading indicator when waiting for http response
@@ -33,4 +35,8 @@
 - [ ] order edit shipping information
 - [x] include old password in password update form
 - [x] add phone number to checkout form
-- [ ] on checkout, on confirm email, check for existing account first
+- [x] on checkout, on confirm email, check for existing account first
+- [ ] add option to delete account
+- [ ] add option to delete account data
+- [ ] checkout - continuous checking for valid data - immediate user feedback
+- [ ] what to do if logged in user tries to checkout with email of another account
