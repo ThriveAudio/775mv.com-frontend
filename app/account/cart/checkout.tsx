@@ -577,6 +577,7 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
   const [emailConfirmed, setEmailConfirmed] = useState(false)
   const [awaitingEmail, setAwaitingEmail] = useState(false)
   const [shippingPrice, setShippingPrice] = useState(0)
+  const [accountExists, setAccountExists] = useState(false)
   let emailIntervalRef = useRef(null)
   const router = useRouter()
 
@@ -890,9 +891,11 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
 
   function onApprove(data, actions) {
     // return fetch("/api/paypal-approve-order").then((e)=>e.json())
+    console.log("onApprove CALLED", JSON.stringify({'items': items, 'paypal': data}))
     return actions.order.capture().then(
-      fetch("/api/paypal-approve-order", {'method': "post", "body": JSON.stringify({'data': items, 'paypal': data})}).then((e)=>e.json()).then((e => {
-
+      fetch("/api/paypal-approve-order", {'method': "post", "body": JSON.stringify({'items': items, 'paypal': data})}).then((e)=>e.json()).then((e => {
+        let slice = e['result'].split(" ")
+        router.push("/account/orders/"+slice[1])
       }))
     )
   }
@@ -920,6 +923,9 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
     } else if (res.result == "confirmed") {
       setEmailConfirmed(true)
       setSectionsEnabled(true)
+      return
+    } else if (res.result == "exists") {
+      setAccountExists(true)
       return
     }
 
@@ -986,11 +992,19 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
           </p>
           {
             awaitingEmail ?
-          <p className="text-sm ml-3 mb-2 -mt-1">
-            We sent a confirmation email. Please check your inbox.
-          </p>
-          :
-          <></>
+            <p className="text-sm ml-3 mb-2 -mt-1">
+              We sent a confirmation email. Please check your inbox.
+            </p>
+            :
+            <></>
+          }
+          {
+            accountExists ?
+            <p className="text-sm ml-3 mb-2 -mt-1">
+              An account with this email already exists. Please <Link className="underline" href="/account/login">login</Link> or <Link className="underline" href="/account/reset-password">reset your Password</Link>.
+            </p>
+            :
+            <></>
           }
           {/* TODO phone number explanation text */}
           <input disabled={!emailConfirmed} ref={refs.shipping.phone} onInput={() => {handleInput("shipping phone")}} value={items.shipping['phone']} placeholder="Phone Number" autoComplete="tel" className="m-2 w-[500px] border-2 border-coolgraylight focus:border-ochre focus:outline-none rounded-lg bg-coolgraymid p-1 placeholder:text-lightoutline disabled:placeholder:text-coolgraylight disabled:text-amber/30"/>
