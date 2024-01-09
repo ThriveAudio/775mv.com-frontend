@@ -17,5 +17,5 @@ export async function middleware(request: NextRequest) {
     response.cookies.set("sessionId", jsonRes['sessionId'], {sameSite: "none", secure: true})
   }
   
-  return response
+  return response 
 }
