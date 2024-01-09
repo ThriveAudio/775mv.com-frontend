@@ -1,7 +1,7 @@
 'use client'
 
 import { useAtom } from 'jotai'
-import { cartAtom, cartScrollAtom } from './../../../utils/atoms'
+import { cartAtom, cartScrollAtom, paypalPriceAtom } from './../../../utils/atoms'
 import { useReducer, useRef } from 'react'
 import Image from 'next/image'
 import Link from "next/link"
@@ -39,7 +39,26 @@ export default function Cart({initialItems}: {initialItems: Array<JSON>}) {
   const [items, dispatch] = useReducer(itemsReducer, initialItems)
   const [cart, setCart] = useAtom(cartAtom)
   const [scrollToCart, setScrollToCart] = useAtom(cartScrollAtom)
+  const [paypalPrice, setPaypalPrice] = useAtom(paypalPriceAtom)
   const emptyCartText = useRef(null)
+
+  function roundUp(num, precision) {
+    precision = Math.pow(10, precision)
+    return Math.ceil(num * precision) / precision
+  }
+
+  fetch('/api/cart').then(e => e.json()).then(e => {
+    let price = 0
+    for (let i = 0; i < e.length; i++) {
+      price += Number(e[i].price) * Number(e[i]['amount'])
+    }
+    price += 9.5
+    price *= 1.035
+
+    price = roundUp(price, 2)
+
+    setPaypalPrice(price)
+  })
 
   if (scrollToCart) {
     emptyCartText.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })

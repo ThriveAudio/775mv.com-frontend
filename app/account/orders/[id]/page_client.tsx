@@ -12,6 +12,13 @@ function getDateTime(timestamp: number): string {
 }
 
 export default function PageOrder({order}: {order: JSON}) {
+
+  function roundUp(num, precision) {
+    precision = Math.pow(10, precision)
+    return Math.ceil(num * precision) / precision
+  }
+
+
   let mainMsg = ""
   if (order['order_status'] == "processing") {
     mainMsg = "Our team is now working on it."
@@ -37,6 +44,11 @@ export default function PageOrder({order}: {order: JSON}) {
   });
   total += order.user.shipping.price
 
+  if (order.payment_method == "paypal") {
+    total *= 1.035
+    total = roundUp(total, 2)
+  }
+
   return <>
     <div className="m-2 flex flex-col items-center text-2xl font-bold">
       <div>Thank you for your order!</div>
@@ -59,6 +71,16 @@ export default function PageOrder({order}: {order: JSON}) {
                 Shipping: <span className='font-bold'>${order.user.shipping.price}</span>
               </div>
             </div>
+            {
+              order.payment_method == "paypal" ?
+              <div className='flex flex-row justify-end'>
+                <div className='mr-4'>
+                  Paypal Fee: <span className='font-bold'>3.5%</span>
+                </div>
+              </div>
+              :
+              <></>
+            }
             <div className='flex flex-row justify-end'>
               <div className='mr-4 mb-1'>
                 Total: <span className='font-bold'>${total}</span>

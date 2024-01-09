@@ -5,7 +5,7 @@ import { useState, useRef, useReducer } from "react"
 import Image from 'next/image'
 import { redirect, useRouter } from 'next/navigation'
 import { useAtom } from 'jotai'
-import { cartAtom, cartScrollAtom } from './../../../utils/atoms'
+import { cartAtom, cartScrollAtom, paypalPriceAtom } from './../../../utils/atoms'
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { CheckIcon, CheckboxIcon } from '@radix-ui/react-icons';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -574,6 +574,7 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
   const [items, dispatch] = useReducer(checkoutReducer, initialItems);
   const [cart, setCart] = useAtom(cartAtom)
   const [scrollToCart, setScrollToCart] = useAtom(cartScrollAtom)
+  const [paypalPrice, setPaypalPrice] = useAtom(paypalPriceAtom)
   const [emailConfirmed, setEmailConfirmed] = useState(false)
   const [awaitingEmail, setAwaitingEmail] = useState(false)
   const [shippingPrice, setShippingPrice] = useState(0)
@@ -869,7 +870,7 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
       purchase_units: [
         {
           amount: {
-            value: "0.01",
+            value: String(paypalPrice),
           },
           shipping: {
             name: {
@@ -893,7 +894,7 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
     // return fetch("/api/paypal-approve-order").then((e)=>e.json())
     console.log("onApprove CALLED", JSON.stringify({'items': items, 'paypal': data}))
     return actions.order.capture().then(
-      fetch("/api/paypal-approve-order", {'method': "post", "body": JSON.stringify({'items': items, 'paypal': data})}).then((e)=>e.json()).then((e => {
+      fetch("/api/paypal-approve-order", {'method': "post", "body": JSON.stringify({'items': items, 'paypal': data, 'price': paypalPrice})}).then((e)=>e.json()).then((e => {
         let slice = e['result'].split(" ")
         router.push("/account/orders/"+slice[1])
       }))
