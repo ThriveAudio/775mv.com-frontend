@@ -1122,3 +1122,4 @@ export default function Checkout({shippingPrices}: {shippingPrices: JSON}) {
     </>
   )
 }
+// let's hope this works on the frontend as well
