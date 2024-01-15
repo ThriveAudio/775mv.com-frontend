@@ -21,3 +21,4 @@ export async function GET(request: Request) {
   
   return Response.json({result: session['state'] == "loggedin"})
 }
+// TODO export mongodb base logic
