@@ -3,6 +3,7 @@
 // import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import * as Select from '@radix-ui/react-select';
 export default function page() {
+  fetch("/api/get-products")
   return (
     <>
       <select className='text-amber bg-coolgraymid border-2 border-coolgraylight rounded-lg px-2 py-1'>
