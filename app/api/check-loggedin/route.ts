@@ -4,7 +4,7 @@ const {MongoClient} = require('mongodb');
 const url = 'mongodb://localhost:27017';
 
 export async function GET(request: Request) {
-  // console.log('GET check-loggedin Nextjs API called')
+  console.log('GET check-loggedin Nextjs API called')
   // const res = {}
   // console.log("GOT HERE")
   // res['sessionId'] = cookies().get('sessionId')?.value

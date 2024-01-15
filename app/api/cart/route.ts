@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 
 export async function GET(request: Request) {
-  console.log('CART Nextjs API called')
+  console.log('GET cart Nextjs API called')
   //console.log(cookies().getAll())
   //console.log(request.headers.keys.length)
   const session = cookies().get('sessionId')?.value
