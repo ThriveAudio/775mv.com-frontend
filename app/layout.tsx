@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 //import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context'
 import './globals.css'

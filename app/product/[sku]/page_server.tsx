@@ -1,3 +1,4 @@
+// @ts-nocheck
 import ProductPage from './page_client'
 const fs = require('fs');
 

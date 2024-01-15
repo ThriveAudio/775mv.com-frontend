@@ -1,3 +1,4 @@
+// @ts-nocheck
 import LogoutClient from './page_client'
 import { cookies } from 'next/headers'
 

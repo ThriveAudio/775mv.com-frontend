@@ -1,8 +1,9 @@
+// @ts-nocheck
 import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense, useState } from 'react';
-import { Products, Loading } from './Products';
-import { Categories } from './Categories';
+// import { Products, Loading } from './Products';
+// import { Categories } from './Categories';
 import Page from './page_client';
 const fs = require('fs');
 

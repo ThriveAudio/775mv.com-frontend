@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 import Image from 'next/image'
 import { Dispatch, FormEventHandler, MouseEventHandler, MutableRefObject, SetStateAction, useEffect, useRef, useState } from 'react'

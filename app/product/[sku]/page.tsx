@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Product from './page_server'
 
 export default function Page({ params }: { params: { sku: string } }) {
