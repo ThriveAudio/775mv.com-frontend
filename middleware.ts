@@ -4,7 +4,7 @@ import { NextRequest } from 'next/server'
  
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-  console.log("middleware running")
+  // console.log("middleware running")
   const response = NextResponse.next()
   let jsonRes = {}
   if (!request.cookies.has('sessionId')) {
