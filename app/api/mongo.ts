@@ -14,14 +14,12 @@ export function getCollection(collection: string) {
 }
 
 export async function getCollectionAsArray(collection: string) {
-  console.log("MONGO COLLECTION AS ARRAY")
   const dbColl = db.collection(collection)
   const cursor = dbColl.find()
 
   let arr = []
   for await (const doc of cursor) {
     arr.push(doc)
-    console.log("DOC", doc)
   }
 
   return arr
