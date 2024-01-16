@@ -4,7 +4,7 @@ const fs = require('fs');
 
 export default async function Product({ sku }: { sku: String }) {
 
-  const res = await fetch('http://127.0.0.1:8000/get-product/'+sku);
+  const res = await fetch('http://127.0.0.1:3000/api/get-product', {method: "post", body: JSON.stringify({'sku': sku})});
 
   if (!res.ok) {
     return {}
