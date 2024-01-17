@@ -1,5 +1,5 @@
 // @ts-nocheck
-import Page from './page_client';
+import Page from './page';
 const fs = require('fs');
 
 export default async function Products() {
