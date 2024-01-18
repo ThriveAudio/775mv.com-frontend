@@ -1,9 +1,4 @@
 // @ts-nocheck
-import Image from 'next/image'
-import Link from 'next/link'
-import { Suspense } from 'react';
-import Products from './page_server'
-
 function SampleProduct() {
   return (
     <div className='group h-[300px] w-[300px] m-3 border border-lightoutline dark:border-coolgraylight dark:bg-coolgraydark rounded-lg shadow-md dark:shadow-[0_4px_6px_-1px_rgba(0,0,0,1)] flex flex-col items-center dark:text-white'>
@@ -17,21 +12,11 @@ function SampleProduct() {
   )
 }
 
-function Loading() {
+export default function Loading() {
   return (
     <div className='animate-pulse flex flex-row flex-wrap justify-center'>
       <SampleProduct/>
       <SampleProduct/>
-      <SampleProduct/>
     </div>
-  )
-}
-
-
-export default function products() {
-  return (
-    <Suspense fallback={<Loading/>}>
-      <Products/>
-    </Suspense>
   )
 }
