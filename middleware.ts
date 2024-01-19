@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next()
   let jsonRes = {}
   if (!request.cookies.has('sessionId')) {
-    const res = await fetch('http://127.0.0.1:8000/session-id')
+    const res = await fetch('http://127.0.0.1:3000/api/session-id')
     if (!res.ok) {
       return response
     }

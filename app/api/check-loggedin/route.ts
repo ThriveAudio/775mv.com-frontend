@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
   const sessionId = cookies().get('sessionId')?.value
 
-  const session = getDocument("sessions", {"id": sessionId})
-  
+  const session = await getDocument("sessions", {"id": sessionId})
+
   return Response.json({result: session['state'] == "loggedin"})
 }
