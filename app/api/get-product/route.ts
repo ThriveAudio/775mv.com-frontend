@@ -14,5 +14,12 @@ export async function POST(request: Request) {
   res['specs'] = fs.readFileSync('./public/'+sku+'/specs.md', { encoding: 'utf8', flag: 'r' });
   res['description'] = fs.readFileSync('./public/'+sku+'/short_desc.md', { encoding: 'utf8', flag: 'r' });
 
+  res['images'] = fs.readdirSync('./public/'+sku).map((image: String) => {
+    if (!image.endsWith(".md")) {
+    return '/'+sku+'/'+image
+    }
+  })
+  res['images'] = res['images'].filter((image) => image != undefined)
+
   return Response.json(res)
 }
