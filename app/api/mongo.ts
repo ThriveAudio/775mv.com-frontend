@@ -25,7 +25,7 @@ export async function getCollectionAsArray(collection: string) {
   return arr
 }
 
-export async function addDocument(collection: string, doc: Map<string, any>) {
+export async function addDocument(collection: string, doc: Map<any, any>) {
   const dbColl = db.collection(collection)
   return dbColl.insertOne(doc)
 }
