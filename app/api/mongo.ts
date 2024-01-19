@@ -29,3 +29,8 @@ export async function addDocument(collection: string, doc: Map<any, any>) {
   const dbColl = db.collection(collection)
   return dbColl.insertOne(doc)
 }
+
+export async function updateDocument(collection: string, filter: Map<any, any>, update: Map<any, any>) {
+  const dbColl = db.collection(collection)
+  dbColl.updateOne(filter, {'$set': update})
+}
