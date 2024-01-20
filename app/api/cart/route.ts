@@ -1,18 +1,28 @@
+// @ts-nocheck
 import { cookies } from 'next/headers'
+import { getDocument } from '../mongo'
+const fs = require('fs')
 
 export async function GET(request: Request) {
-  console.log('GET cart Nextjs API called')
-  //console.log(cookies().getAll())
-  //console.log(request.headers.keys.length)
-  const session = cookies().get('sessionId')?.value
-  if (session == undefined) {
-    console.log('sessionid undefined')
-    return Response.json({})
-  } else {
-    //console.log("SESSION ", session)
-    const req = await fetch('http://127.0.0.1:8000/cart', {"method": "post", "body": JSON.stringify({'sessionId': session})})
-    const resJson = await req.json()
-    console.log("RESPONSE ", resJson)
-    return Response.json(resJson)
+  console.log('POST cart Nextjs API called')
+  const sessionId = cookies().get('sessionId')?.value
+  const session = await getDocument('sessions', {'id': sessionId})
+  let account = await getDocument('accounts', {'_id': session['account']})
+
+  for (let i = 0; i < account['cart'].length; i++) {
+    const dbItem = await getDocument('products', {'sku': account['cart'][i]['sku']})
+    account['cart'][i]['price'] = dbItem['price']
+    account['cart'][i]['name'] = dbItem['name']
+    account['cart'][i]['description'] = dbItem['description']
   }
+
+  const items = account['cart'].map(item => {
+    item['image'] = '/'+item['sku']+'/'+fs.readdirSync('./public/'+item['sku'])[0]
+    item['amount'] = item['amount'].toString()
+    return item
+  })
+
+  console.log("ITEMS: ", items)
+
+  return Response.json(items)
 }
