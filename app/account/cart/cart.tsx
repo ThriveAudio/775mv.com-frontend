@@ -101,15 +101,15 @@ export default function Cart({initialItems}: {initialItems: Array<JSON>}) {
 
     const item = items.filter((i)=>i['sku']==e)[0]
 
-    const _amount = (Number(item['amount'])-1).toString()
+    const _amount = Number(item['amount'])-1
 
-    const res = await (await fetch('/api/update-cart', {"method": "post", "body": JSON.stringify({
-      "sku": item['sku'],
-      "type": "amount",
-      "value": _amount
-    })})).json()
+    if (_amount > 0) {
+      const res = await (await fetch('/api/update-cart', {"method": "post", "body": JSON.stringify({
+        "sku": item['sku'],
+        "type": "amount",
+        "value": _amount
+      })})).json()
 
-    if (res['result'] == "ok") {
       dispatch({
         type: 'updateAmount',
         id: e,
@@ -123,7 +123,7 @@ export default function Cart({initialItems}: {initialItems: Array<JSON>}) {
 
     const item = items.filter((i)=>i['sku']==e)[0]
 
-    const _amount = (Number(item['amount'])+1).toString()
+    const _amount = Number(item['amount'])+1
 
     const res = await (await fetch('/api/update-cart', {"method": "post", "body": JSON.stringify({
       "sku": item['sku'],
@@ -131,31 +131,65 @@ export default function Cart({initialItems}: {initialItems: Array<JSON>}) {
       "value": _amount
     })})).json()
 
-    if (res['result'] == "ok") {
-      dispatch({
-        type: 'updateAmount',
-        id: e,
-        amount: _amount
-      })
-      setCart(cart+1)
-    }
+    dispatch({
+      type: 'updateAmount',
+      id: e,
+      amount: _amount
+    })
+    setCart(cart+1)
   }
 
   async function handleChange(e) {
     const item = items.filter((i)=>i['sku']==e.target.id)[0]
     const _amount = e.target.value
 
-    const res = await (await fetch('/api/update-cart', {"method": "post", "body": JSON.stringify({
-      "sku": item['sku'],
-      "type": "amount",
-      "value": _amount
-    })})).json()
+    if (!isNaN(_amount) && _amount != "") {
 
-    if (res['result'] == "ok") {
+      const intAmount = Number(_amount)
+
+      if (intAmount > 0) {
+        const res = await (await fetch('/api/update-cart', {"method": "post", "body": JSON.stringify({
+          "sku": item['sku'],
+          "type": "amount",
+          "value": intAmount
+        })})).json()
+
+        dispatch({
+          type: 'updateAmount',
+          id: e.target.id,
+          amount: intAmount
+        })
+
+        fetch('/api/cart').then(e => e.json()).then(e => {
+          let amount = 0
+          for (let i = 0; i < e.length; i++) {
+            amount = amount + Number(e[i]['amount'])
+          }
+          setCart(amount)
+        })
+      }
+    } else if (_amount == "") {
       dispatch({
         type: 'updateAmount',
         id: e.target.id,
-        amount: _amount
+        amount: ""
+      })
+    }
+  }
+
+  async function handleLostFocus(e) {
+    const item = items.filter((i)=>i['sku']==e.target.id)[0]
+    if (e.target.value == "") {
+      await fetch('/api/update-cart', {"method": "post", "body": JSON.stringify({
+        "sku": item['sku'],
+        "type": "amount",
+        "value": 1
+      })})
+
+      dispatch({
+        type: 'updateAmount',
+        id: e.target.id,
+        amount: "1"
       })
 
       fetch('/api/cart').then(e => e.json()).then(e => {
@@ -163,17 +197,8 @@ export default function Cart({initialItems}: {initialItems: Array<JSON>}) {
         for (let i = 0; i < e.length; i++) {
           amount = amount + Number(e[i]['amount'])
         }
+        console.log("Lost focus, updating cart icon: ", amount)
         setCart(amount)
-      })
-    }
-  }
-
-  function handleLostFocus(e) {
-    if (e.target.value == "") {
-      dispatch({
-        type: 'updateAmount',
-        id: e.target.id,
-        amount: "1"
       })
     }
 
@@ -188,20 +213,18 @@ export default function Cart({initialItems}: {initialItems: Array<JSON>}) {
       "type": "delete"
     })})).json()
 
-    if (res['result'] == "ok") {
-      dispatch({
-        type: 'delete',
-        id: e
-      })
-      
-      fetch('/api/cart').then(e => e.json()).then(e => {
-        let amount = 0
-        for (let i = 0; i < e.length; i++) {
-          amount = amount + Number(e[i]['amount'])
-        }
-        setCart(amount)
-      })
-    }
+    dispatch({
+      type: 'delete',
+      id: e
+    })
+    
+    fetch('/api/cart').then(e => e.json()).then(e => {
+      let amount = 0
+      for (let i = 0; i < e.length; i++) {
+        amount = amount + Number(e[i]['amount'])
+      }
+      setCart(amount)
+    })
   }
 
   const itemComponents = items.map((item, i) => {
