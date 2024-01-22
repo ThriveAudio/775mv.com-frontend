@@ -22,7 +22,5 @@ export async function GET(request: Request) {
     return item
   })
 
-  console.log("ITEMS: ", items)
-
   return Response.json(items)
 }
