@@ -6,8 +6,8 @@ import Checkout from "./checkout";
 
 export default function Page() {
 
-  const [cart, setCart] = useState([])
-  const [shippingPrices, setShippingPrices] = useState({})
+  const [cart, setCart] = useState(null)
+  const [shippingPrices, setShippingPrices] = useState(null)
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -37,7 +37,7 @@ export default function Page() {
   }, [])
 
 
-  if (shippingPrices['US'] == undefined) {
+  if (cart === null || shippingPrices === null) {
     return (
       <></>
     )
