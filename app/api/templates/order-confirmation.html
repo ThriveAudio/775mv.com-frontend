@@ -1,0 +1,14 @@
+Dear {{info.user.first_name}} {{info.user.last_name}},
+<br><br>
+Here is your order summary:<br>
+{% for item in info.items %}
+${{item.price}} {{item.amount}}x {{item.name}}<br>
+{% endfor %}
+${{info.shipping}} Shipping
+<br><br>
+Total: ${{info.total}} for {{info.amount}} {% if user.amount > 1 %}items{% else %}item{% endif %}.
+<br><br>
+<a href="http://127.0.0.1:3000/account/orders/{{order_db_id}}">View this on the website</a>
+<br><br>
+Best regards,<br>
+Thrive Audio LLC Team
