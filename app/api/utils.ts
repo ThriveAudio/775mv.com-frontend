@@ -217,7 +217,7 @@ export async function createOrder(account, res, id=-1) {
     'items': items
   })
 
-  return order.inserted_id
+  return order.insertedId
 }
 
 export async function orderAddAuthorize(order_id, authorize_id) {
