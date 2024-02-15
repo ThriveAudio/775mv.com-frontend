@@ -1,4 +1,4 @@
-// ts-nocheck
+// @ts-nocheck
 import { cookies } from 'next/headers'
 import { getDocument } from '../mongo'
 // let ApiContracts = require('authorizenet').APIContracts;
@@ -152,8 +152,10 @@ export async function POST(request: Request) {
     })
 
     console.log("transaction successful")
+    return Response.json({"result": `success ${order_db_id}`})
   } else {
     console.log("transaction failed ", authorize.responseText)
+    return Response.json(req)
   }
   
 
