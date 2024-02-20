@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { addDocument, getDocument, updateDocument } from './mongo';
 import { parse } from 'node-html-parser'
+import mongoose from "mongoose"
 
 export async function createAccount() {
   return await addDocument('accounts', {
@@ -224,4 +225,24 @@ export async function orderAddAuthorize(order_id, authorize_id) {
   await updateDocument('orders', {'_id': order_id}, {'authorize_id': authorize_id})
   await updateDocument('orders', {'_id': order_id}, {'payment_status': 'authorized'})
   await updateDocument('orders', {'_id': order_id}, {'payment_method': 'card'})
+}
+
+export function validatePassword(password) {
+  if (password.search(/[0-9]+/g) == -1) {
+    return false
+  }
+  if (password.search(/[a-z]+/g) == -1) {
+    return false
+  }
+  if (password.search(/[A-Z]+/g) == -1) {
+    return false
+  }
+  if (password.search(/[^a-zA-Z0-9 \n]+/g) == -1) {
+    return false
+  }
+  return true
+}
+
+export function mongoId(id) {
+  return new mongoose.Types.ObjectId(id)
 }
