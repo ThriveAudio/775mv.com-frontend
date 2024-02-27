@@ -243,6 +243,10 @@ export function validatePassword(password) {
   return true
 }
 
+export function validateEmail(email) {
+  return email.search(/.+@.+\..+/g) != -1
+}
+
 export function mongoId(id) {
   return new mongoose.Types.ObjectId(id)
 }
