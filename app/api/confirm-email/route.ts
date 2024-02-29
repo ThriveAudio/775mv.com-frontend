@@ -27,29 +27,22 @@ export async function POST(request: Request) {
 
   console.log('GOT HERE 1')
 
-  const accounts = await getCollectionAsArray('accounts')
-  for (let i = 0; i < accounts.length; i++) {
-    const _account = accounts[i]
-    if (_account['_id'] != session['account']) {
-      if (res['email'] == _account['email']) {
-        return Response.json({'result': 'exists'})
-      }
-      for (let x = 0; x < _account['old_emails'].length; x++) {
-        if (_account['old_emails'][x] == res['email']) {
-          return Response.json({'result': 'exists'})
-        }
-      }
-    }
-  }
-
-  console.log('GOT HERE 2')
-
   if (account['email'] == res['email']) {
-
     return Response.json({'result': 'confirmed'})
   }
 
-  console.log('GOT HERE 2.1')
+  const accounts = await getCollectionAsArray('accounts')
+  for (let i = 0; i < accounts.length; i++) {
+    const _account = accounts[i]
+    if (res['email'] == _account['email']) {
+      return Response.json({'result': 'exists'})
+    }
+    for (let x = 0; x < _account['old_emails'].length; x++) {
+      if (_account['old_emails'][x] == res['email']) {
+        return Response.json({'result': 'exists'})
+      }
+    }
+  }
 
   for (let i = 0; i < account['old_emails'].length; i++) {
     console.log("GOT HERE 2.2")
