@@ -2,7 +2,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useRef, useReducer, useState } from "react"
+import { useRef, useReducer, useState, useEffect } from "react"
 import { useAtom } from 'jotai'
 import { pageBackAtom } from '../../../utils/atoms'
 import Link from 'next/link'
@@ -18,7 +18,23 @@ function loginReducer(items, action) {
   }
 }
 
-export default function LoginClient({redirect, trustedDevice}) {
+export default function LoginClient({trustedDevice}) {
+
+  useEffect(() => {
+    const checkLoggedin = async () => {
+      const data = await (
+        await fetch(
+          'http://127.0.0.1:3000/api/check-loggedin'
+        )
+      ).json()
+
+      if (data['result']) {
+        router.push("/")
+      }
+    }
+
+    checkLoggedin()
+  }, [])
 
   const initialItems = {
     "email": "",
@@ -40,9 +56,9 @@ export default function LoginClient({redirect, trustedDevice}) {
   const [wrongLogin, setWrongLogin] = useState(false)
   const [pageBack, setPageBack] = useAtom(pageBackAtom)
 
-  if (redirect) {
-    router.push("/")
-  }
+  // if (redirect) {
+  //   router.push("/")
+  // }
 
   function handleInputUpdate(field) {
     console.log(refs[[field]].current.value)
