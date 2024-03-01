@@ -227,6 +227,12 @@ export async function orderAddAuthorize(order_id, authorize_id) {
   await updateDocument('orders', {'_id': order_id}, {'payment_method': 'card'})
 }
 
+export async function orderAddPaypal(order_id, paypal_info) {
+  await updateDocument('orders', {'_id': order_id}, {'payment_status': 'captured'})
+  await updateDocument('orders', {'_id': order_id}, {'payment_method': 'paypal'})
+  await updateDocument('orders', {'_id': order_id}, {'paypal_info': paypal_info})
+}
+
 export function validatePassword(password) {
   if (password.search(/[0-9]+/g) == -1) {
     return false
@@ -249,4 +255,47 @@ export function validateEmail(email) {
 
 export function mongoId(id) {
   return new mongoose.Types.ObjectId(id)
+}
+
+function roundUp(num, precision) {
+  precision = Math.pow(10, precision)
+  return Math.ceil(num * precision) / precision
+}
+
+export async function renderEmailInfo(account, res, config, paypal = false) {
+  let email_info = {items: [], shipping: 0, total: 0, amount: 0, user: {}, address: {}}
+  for (let i = 0; i < account['cart'].length; i++) {
+    const db_item = await getDocument('products', {'sku': account['cart'][i].sku})
+    email_info.items.push({
+      name: db_item.name,
+      amount: account['cart'][i].amount,
+      price: db_item.price * account['cart'][i].amount
+    })
+    email_info.total += db_item.price * account['cart'][i].amount
+    email_info.amount += account['cart'][i].amount
+  }
+  if (res.items.shipping.country == "US") {
+    email_info.shipping = config.shipping_price.US
+    email_info.total += config.shipping_price.US
+  } else {
+    email_info.shipping = config.shipping_price.Worldwide
+    email_info.total += config.shipping_price.Worldwide
+  }
+
+  if (paypal) {
+    email_info.total *= 1.035
+    email_info.total = roundUp(email_info.total, 2)
+  }
+
+  email_info.user['first_name'] = res.items.shipping.first_name
+  email_info.user['last_name'] = res.items.shipping.last_name
+
+  email_info['address']['address1'] = res.items.shipping['address1']
+  email_info['address']['address2'] = res.items.shipping['address2']
+  email_info['address']['city'] = res.items.shipping.city
+  email_info['address']['state'] = res.items.shipping.state
+  email_info['address']['zip'] = res.items.shipping.zip
+  email_info['address']['country'] = res.items.shipping.country
+
+  return email_info
 }

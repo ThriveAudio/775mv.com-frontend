@@ -3,42 +3,9 @@ import { cookies } from 'next/headers'
 import { getDocument } from '../mongo'
 // let ApiContracts = require('authorizenet').APIContracts;
 // let ApiControllers = require('authorizenet').APIControllers;
-import { AuthorizeDoc, createOrder, newOrderId, orderAddAuthorize } from '../utils';
+import { AuthorizeDoc, createOrder, newOrderId, orderAddAuthorize, renderEmailInfo } from '../utils';
 import { sendEmail, sendTemplate } from '../email';
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-
-async function renderEmailInfo(account, res, config) {
-  let email_info = {items: [], shipping: 0, total: 0, amount: 0, user: {}, address: {}}
-  for (let i = 0; i < account['cart'].length; i++) {
-    const db_item = await getDocument('products', {'sku': account['cart'][i].sku})
-    email_info.items.push({
-      name: db_item.name,
-      amount: account['cart'][i].amount,
-      price: db_item.price * account['cart'][i].amount
-    })
-    email_info.total += db_item.price * account['cart'][i].amount
-    email_info.amount += account['cart'][i].amount
-  }
-  if (res.items.shipping.country == "US") {
-    email_info.shipping = config.shipping_price.US
-    email_info.total += config.shipping_price.US
-  } else {
-    email_info.shipping = config.shipping_price.Worldwide
-    email_info.total += config.shipping_price.Worldwide
-  }
-
-  email_info.user['first_name'] = res.items.shipping.first_name
-  email_info.user['last_name'] = res.items.shipping.last_name
-
-  email_info['address']['address1'] = res.items.shipping['address1']
-  email_info['address']['address2'] = res.items.shipping['address2']
-  email_info['address']['city'] = res.items.shipping.city
-  email_info['address']['state'] = res.items.shipping.state
-  email_info['address']['zip'] = res.items.shipping.zip
-  email_info['address']['country'] = res.items.shipping.country
-
-  return email_info
-}
 
 export async function POST(request: Request) {
   console.log('POST authorize Nextjs API called')
