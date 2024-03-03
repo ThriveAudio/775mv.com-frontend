@@ -13,7 +13,7 @@ const fs = require('fs');
 export default async function PageOrderServer({id}) {
   // const session = cookies().get('sessionId')?.value
   // console.log("SESSION: ",session)
-  const resJson = await (await fetch('http://127.0.0.1:3000/api/order', {'method': 'post', 'body': JSON.stringify(id)})).json()
+  const resJson = await (await fetch(process.env.ROOT_URL+'/api/order', {'method': 'post', 'body': JSON.stringify(id)})).json()
   // console.log("local order response: ", order_res)
   // const req = await fetch('http://127.0.0.1:8000/order/'+id, {"method": "post", "body": JSON.stringify({'sessionId': session})})
 

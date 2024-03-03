@@ -12,8 +12,8 @@ const fs = require('fs');
 
 export default async function PageCart() {
   const session = cookies().get('sessionId')?.value
-  const req = await fetch('http://127.0.0.1:8000/cart', {"method": "post", "body": JSON.stringify({'sessionId': session})})
-  //const res = await fetch('http://127.0.0.1:3000/api/cart')
+  const req = await fetch(process.env.ROOT_URL+'/cart', {"method": "post", "body": JSON.stringify({'sessionId': session})})
+  //const res = await fetch(process.env.ROOT_URL+'/api/cart')
   const resJson = await req.json()
   console.log("RESPONSE JSON ", resJson)
 

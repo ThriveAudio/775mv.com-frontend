@@ -13,7 +13,7 @@ export default function Page() {
     const fetchCart = async () => {
       const data = await (
         await fetch(
-          'http://127.0.0.1:3000/api/cart'
+          '/api/cart'
         )
       ).json()
 
@@ -24,7 +24,7 @@ export default function Page() {
     const fetchShippingPrices = async () => {
       const data = await (
         await fetch(
-          'http://127.0.0.1:3000/api/get-shipping-methods'
+          '/api/get-shipping-methods'
         )
       ).json()
 

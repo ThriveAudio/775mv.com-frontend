@@ -24,7 +24,7 @@ export default function LoginClient({trustedDevice}) {
     const checkLoggedin = async () => {
       const data = await (
         await fetch(
-          'http://127.0.0.1:3000/api/check-loggedin'
+          '/api/check-loggedin'
         )
       ).json()
 

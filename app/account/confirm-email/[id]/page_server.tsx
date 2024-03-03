@@ -7,8 +7,8 @@ export default async function PageServer({id}) {
 
   const session = cookies().get('sessionId')?.value
   // const req = await fetch('http://127.0.0.1:8000/check-email-id/'+id, {"method": "post", "body": JSON.stringify({'sessionId': session})})
-  const req = await fetch('http://127.0.0.1:3000/api/check-email-id', {"method": "post", "body": JSON.stringify({'sessionId': session, 'id': id})})
-  //const res = await fetch('http://127.0.0.1:3000/api/cart')
+  const req = await fetch(process.env.ROOT_URL+'/api/check-email-id', {"method": "post", "body": JSON.stringify({'sessionId': session, 'id': id})})
+  //const res = await fetch(process.env.ROOT_URL+'/api/cart')
   const resJson = await req.json()
 
   if (resJson.result == "error") {

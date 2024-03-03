@@ -17,7 +17,7 @@ export default function Page({ params }: { params: { sku: string } }) {
     const fetchProduct = async () => {
       const data = await (
         await fetch(
-          'http://127.0.0.1:3000/api/get-product',
+          '/api/get-product',
           {
             method: "post",
             body: JSON.stringify({'sku': params.sku})

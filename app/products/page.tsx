@@ -14,7 +14,7 @@ export default function Page() {
     const fetchProducts = async () => {
       const data = await (
         await fetch(
-          'http://127.0.0.1:3000/api/get-products'
+          '/api/get-products'
         )
       ).json()
 
