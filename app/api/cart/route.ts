@@ -4,7 +4,7 @@ import { getDocument } from '../mongo'
 const fs = require('fs')
 
 export async function GET(request: Request) {
-  console.log('POST cart Nextjs API called')
+  console.log('GET cart Nextjs API called')
   const sessionId = cookies().get('sessionId')?.value
   const session = await getDocument('sessions', {'id': sessionId})
   let account = await getDocument('accounts', {'_id': session['account']})
