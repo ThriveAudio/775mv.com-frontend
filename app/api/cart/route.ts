@@ -1,13 +1,14 @@
 // @ts-nocheck
 import { cookies } from 'next/headers'
 import { getDocument } from '../mongo'
+import { mongoId } from '../utils'
 const fs = require('fs')
 
 export async function GET(request: Request) {
   console.log('GET cart Nextjs API called')
   const sessionId = cookies().get('sessionId')?.value
   const session = await getDocument('sessions', {'id': sessionId})
-  let account = await getDocument('accounts', {'_id': session['account']})
+  let account = await getDocument('accounts', {'_id': mongoId(session['account'])})
 
   for (let i = 0; i < account['cart'].length; i++) {
     const dbItem = await getDocument('products', {'sku': account['cart'][i]['sku']})
