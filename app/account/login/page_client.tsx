@@ -117,12 +117,18 @@ export default function LoginClient({trustedDevice}) {
             <label className="ml-2">Trust this device</label>
         </div>
         <button onClick={handleSubmit} disabled={timer > 0} className="m-2 w-[211px] border-2 border-ochre rounded-lg bg-amber p-1 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none disabled:active:shadow-none">Login</button>
+        <div className='flex flex-row w-[211px] leading-[.60rem] text-ochre'>
+          <div className='my-auto mx-1 h-[1px] w-[100px] bg-ochre'></div>
+          or
+          <div className='my-auto mx-1 h-[1px] w-[100px] bg-ochre'></div>
+        </div>
+        <a href={"/account/register"} disabled={timer > 0} className="m-2 w-[211px] border-2 border-ochre rounded-lg bg-amber p-1 text-center font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none disabled:active:shadow-none">Create Account</a>
         <Link className='underline' href="/account/reset-password">Reset Password</Link>
         {
           timer > 0 ?
           <div className='flex flex-col items-center'>
             <div className='mt-3'>
-              Incorrect Login
+              Something went wrong.
             </div>
             <div className='mt-3'>
               Please wait
@@ -138,13 +144,13 @@ export default function LoginClient({trustedDevice}) {
           wrongLogin ?
           <div className='flex flex-col items-center'>
             <div className='mt-3'>
-              Incorrect Login
+              Something went wrong.
             </div>
-            <div className='mt-3'>
+            {/* <div className='mt-3'>
               <a href="/account/register" className='mt-2 border-2 border-coolgraylight px-3 py-1 rounded-lg bg-coolgraymid hover:border-ochre'>
                 Create Account
               </a>
-            </div>
+            </div> */}
           </div>
           :
           <></>

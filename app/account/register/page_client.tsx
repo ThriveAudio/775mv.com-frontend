@@ -193,6 +193,12 @@ export default function RegisterClient({trustedDevice}) {
         <button onClick={handleSubmit} className="m-2 w-[211px] border-2 border-ochre rounded-lg bg-amber p-1 font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)]">
           Create Account
         </button>
+        <div className='flex flex-row w-[211px] leading-[.60rem] text-ochre'>
+          <div className='my-auto mx-1 h-[1px] w-[100px] bg-ochre'></div>
+          or
+          <div className='my-auto mx-1 h-[1px] w-[100px] bg-ochre'></div>
+        </div>
+        <a href={"/account/login"} className="m-2 w-[211px] border-2 border-ochre rounded-lg bg-amber p-1 text-center font-bold text-coolgraydark hover:shadow-[0px_5px_10px_0px_rgba(0,0,0,1)] hover:scale-105 border-2 border-ochre active:scale-[102%] active:shadow-[0px_1px_5px_0px_rgba(0,0,0,1)] disabled:border-coolgraylight disabled:bg-coolgraymid disabled:text-coolgraylight disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none disabled:active:shadow-none">Login</a>
         {
           accountExists ?
           <div className='flex flex-col'>
