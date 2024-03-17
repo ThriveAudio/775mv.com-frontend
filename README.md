@@ -2,6 +2,7 @@
 
 ## todo
 
+### MVP
 - [x] checkout
   - [x] scroll to cart and show it's empty when placing order
   - [x] select country instead of typing
@@ -20,23 +21,28 @@
 - [x] auth
   - [x] take the trusted device check value from db on page load
 - [x] password reset
-- [ ] pages
-  - [ ] about
-  - [ ] terms and conditions
-  - [ ] privacy policy
-- [ ] paypal
+- [x] paypal
   - [x] integrate
-  - [ ] get proper price
-- [ ] menu icons (option to turn off text?)
-- [ ] desktop & mobile friendly css
-- [ ] loading indicator when waiting for http response
+  - [x] get proper price
 - [x] 404 page
-- [ ] input field css & js
-- [ ] order edit shipping information
 - [x] include old password in password update form
 - [x] add phone number to checkout form
 - [x] on checkout, on confirm email, check for existing account first
+- [ ] restructure main menu
+- [ ] change product descriptions from markdown to html
+- [ ] pages
+  - [ ] contact
+  - [ ] about
+  - [ ] terms and conditions
+  - [ ] privacy policy
+
+### Post Launch
+- [ ] menu icons (option to turn off text?)
+- [ ] desktop & mobile friendly css
+- [ ] input field css & js
+- [ ] order edit shipping information
 - [ ] add option to delete account
 - [ ] add option to delete account data
 - [ ] checkout - continuous checking for valid data - immediate user feedback
 - [ ] what to do if logged in user tries to checkout with email of another account
+- [ ] loading indicator when waiting for http response
