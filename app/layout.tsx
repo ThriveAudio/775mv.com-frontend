@@ -56,10 +56,10 @@ function NavButton({ children, href, expanded, toggle }: { children: React.React
   }
 
   return (
-    <Link onClick={closeMenu} href={href} className='interactable group relative px-2 py-2'>
+    <a onClick={closeMenu} href={href} className='interactable group relative px-2 py-2'>
       {children}
       <span className='absolute h-0.5 w-0 -mb-0.5 group-hover:w-full transition-all duration-125 bottom-0 inset-x-1/2 group-hover:left-0 bg-black dark:bg-ochre'></span>
-    </Link>
+    </a>
   );
 }
 
@@ -224,8 +224,17 @@ export default function RootLayout({
         {/* <div ref={mouseRef} className='mouse' id='mouse' style={{transform: mouseState, opacity: mouseOpacity}}/> */}
         <NavBar cartAmount={cart}>
           <NavButton href={'/products'} expanded={expanded} toggle={toggle}>Products</NavButton>
+          <NavButton href={'/account/cart'} expanded={expanded} toggle={toggle}>
+            <div className='flex flex-row'>
+              <Image src={cartIcon} width={20} height={20} alt={"cart icon"} className='h-[20px]'/>
+              Cart
+            </div>
+          </NavButton>
+          <NavButton href={'/account/settings'} expanded={expanded} toggle={toggle}>Account</NavButton>
+          <NavButton href={'/contact'} expanded={expanded} toggle={toggle}>Contact</NavButton>
           <NavButton href={'/about'} expanded={expanded} toggle={toggle}>About</NavButton>
-          <NavMenu value='Account' toggle={toggle} expanded={expanded}>
+
+          {/* <NavMenu value='Account' toggle={toggle} expanded={expanded}>
             <NavMenuButton href={'/account/cart'} >Cart</NavMenuButton>
             <NavMenuButton href={'/account/orders'}>Orders</NavMenuButton>
             <NavMenuButton href={'/account/settings'}>Settings</NavMenuButton>
@@ -243,8 +252,8 @@ export default function RootLayout({
               :
               <></>
             }
-            {/* {sessionJSX} */}
-          </NavMenu>
+            {/* {sessionJSX} 
+          </NavMenu> */}
         </NavBar>
         <Body>
           {children}
