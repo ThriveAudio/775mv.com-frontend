@@ -46,3 +46,14 @@
 - [ ] checkout - continuous checking for valid data - immediate user feedback
 - [ ] what to do if logged in user tries to checkout with email of another account
 - [ ] loading indicator when waiting for http response
+
+## Notes
+max 5 menu items
+
+products
+cart
+account
+contact
+about
+  q&a
+  terms&conditions
