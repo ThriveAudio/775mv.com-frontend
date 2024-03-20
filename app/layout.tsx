@@ -13,6 +13,9 @@ import { useAtom } from 'jotai'
 import { cartAtom, sessionAtom, pageBackAtom } from './../utils/atoms'
 import cartIcon from './../public/cart.png'
 import pfpIcon from './../public/pfp.png'
+import productIcon from './../public/product_edited.svg'
+import enveloppeIcon from './../public/enveloppe.svg'
+import questionIcon from './../public/question.svg'
 import Image from 'next/image'
 import React from 'react'
 
@@ -29,7 +32,7 @@ function NavBar({ children, cartAmount }: { children: React.ReactNode, cartAmoun
     <nav className='sticky z-50 top-0 left-0 right-0 shadow border-b-2 bg-coolgraydark border-b-coolgraylight text-amber font-bold'>
       <div className='relative mx-auto w-[1280px] flex flex-row justify-center items-center'>
         {children}
-        <a href={'/account/cart'} className='interactable group absolute right-[31px]'>
+        {/* <a href={'/account/cart'} className='interactable group absolute right-[31px]'>
           <div className='relative px-[8px] py-[11px]'>
             <Image src={cartIcon} width={20} height={10} alt={"cart icon"} />
             {cartAmount > 0 ? <span className='absolute bottom-1 right-0 px-1 rounded-xl bg-lightaccentbg text-sm text-coolgraydark'>{cartAmount}</span> : <span />}
@@ -41,7 +44,7 @@ function NavBar({ children, cartAmount }: { children: React.ReactNode, cartAmoun
             <Image src={pfpIcon} width={15} height={7} alt={"pfp icon"} />
             <span className='absolute h-0.5 w-0 -mb-0.5 group-hover:w-full transition-all duration-125 bottom-0 inset-x-1/2 group-hover:left-0 bg-black dark:bg-ochre' />
           </div>
-        </Link>
+        </Link> */}
       </div>
     </nav>
   );
@@ -56,7 +59,7 @@ function NavButton({ children, href, expanded, toggle }: { children: React.React
   }
 
   return (
-    <a onClick={closeMenu} href={href} className='interactable group relative px-2 py-2'>
+    <a onClick={closeMenu} href={href} className='interactable group relative mx-9 px-2 py-2'>
       {children}
       <span className='absolute h-0.5 w-0 -mb-0.5 group-hover:w-full transition-all duration-125 bottom-0 inset-x-1/2 group-hover:left-0 bg-black dark:bg-ochre'></span>
     </a>
@@ -223,16 +226,36 @@ export default function RootLayout({
       <body className='bg-lightbg dark:bg-coolgraymid font-hero'>
         {/* <div ref={mouseRef} className='mouse' id='mouse' style={{transform: mouseState, opacity: mouseOpacity}}/> */}
         <NavBar cartAmount={cart}>
-          <NavButton href={'/products'} expanded={expanded} toggle={toggle}>Products</NavButton>
+          <NavButton href={'/products'} expanded={expanded} toggle={toggle}>
+            <div className='flex flex-row items-center'>
+              <Image src={productIcon} width={20} height={20} alt={"cart icon"} className='w-[25px] h-[25px] pr-[7px]'/>
+              Products
+            </div>
+          </NavButton>
+          <NavButton href={'/about'} expanded={expanded} toggle={toggle}>
+            <div className='flex flex-row items-center'>
+              <Image src={questionIcon} width={15} height={7} alt={"pfp icon"} className='w-[20px] h-[24px] pr-[7px]'/>
+              About
+            </div>
+          </NavButton>
+          <NavButton href={'/contact'} expanded={expanded} toggle={toggle}>
+            <div className='flex flex-row items-center'>
+              <Image src={enveloppeIcon} width={15} height={7} alt={"pfp icon"} className='w-[27px] h-[18px] pr-[7px]'/>
+              Contact
+            </div>
+          </NavButton>
           <NavButton href={'/account/cart'} expanded={expanded} toggle={toggle}>
-            <div className='flex flex-row'>
-              <Image src={cartIcon} width={20} height={20} alt={"cart icon"} className='h-[20px]'/>
+            <div className='flex flex-row items-center'>
+              <Image src={cartIcon} width={20} height={20} alt={"cart icon"} className='w-[25px] h-[18px] pr-[7px]'/>
               Cart
             </div>
           </NavButton>
-          <NavButton href={'/account/settings'} expanded={expanded} toggle={toggle}>Account</NavButton>
-          <NavButton href={'/contact'} expanded={expanded} toggle={toggle}>Contact</NavButton>
-          <NavButton href={'/about'} expanded={expanded} toggle={toggle}>About</NavButton>
+          <NavButton href={'/account/settings'} expanded={expanded} toggle={toggle}>
+            <div className='flex flex-row items-center'>
+              <Image src={pfpIcon} width={15} height={7} alt={"pfp icon"} className='w-[22px] h-[18px] pr-[7px]'/>
+              Account
+            </div>
+          </NavButton>
 
           {/* <NavMenu value='Account' toggle={toggle} expanded={expanded}>
             <NavMenuButton href={'/account/cart'} >Cart</NavMenuButton>
