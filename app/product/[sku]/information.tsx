@@ -1,7 +1,9 @@
+// @ts-nocheck
+
 import { useRef } from "react";
 import ReactMarkdown from 'react-markdown'
 
-export default function Information({ info, amount, addAmount, subtractAmount, updateAmount, onLostFocus, amountRef, addToCart }: { info: JSON , amount: number, addAmount: any, subtractAmount: any, updateAmount: any, onLostFocus: any, amountRef: any, addToCart: any }) {
+export default function Information({ info, desc, amount, addAmount, subtractAmount, updateAmount, onLostFocus, amountRef, addToCart }: { info: JSON , amount: number, addAmount: any, subtractAmount: any, updateAmount: any, onLostFocus: any, amountRef: any, addToCart: any }) {
 
   const holding = useRef('none')
   const updateFuncVar = useRef(setTimeout(updateOnHeld, 200))
@@ -40,7 +42,8 @@ export default function Information({ info, amount, addAmount, subtractAmount, u
   return (
     <div className='justify-self-start ml-4 mt-[19px] col-start-2 h-[412px] w-[500px] text-amber relative flex flex-col'>
       <div className='self-left font-bold text-4xl'>{info['name']}</div>
-      <div className='text-wrap mt-4'><ReactMarkdown>{info['description']}</ReactMarkdown></div>
+      <div className='text-wrap mt-4'>{desc}</div>
+      {/* <div className='text-wrap mt-4'><ReactMarkdown>{info['description']}</ReactMarkdown></div> */}
 
       <div className='absolute bottom-[159px] right-0'>
         <button onClick={subtractAmount} onMouseDown={subtractHold} onMouseUp={subtractUnhold} className='interactable h-[44px] w-[30px] bg-coolgraydark border-l-2 border-t-2 border-b-2 border-coolgraylight rounded-l-lg active:scale-[95%]'>-</button>

@@ -10,6 +10,8 @@ import ImageSection from "./image_section"
 
 export default function Page({ params }: { params: { sku: string } }) {
 
+  const description = require(`./_descs/${params.sku}`)
+
   const [product, setProduct] = useState({})
   // let imgRefs = []
 
@@ -124,9 +126,10 @@ export default function Page({ params }: { params: { sku: string } }) {
   return (
     <div className='relative grid grid-cols-2 grid-rows-[460px_auto]'>
       <ImageSection info={product} prevImg={previousImg} nextImg={nextImg} imgIndex={imgIndex} setIndex={userSetIndex} imgRefs={imgRefs} />
-      <Information info={product} amount={amount} addAmount={addAmount} subtractAmount={subtractAmount} updateAmount={updateAmount} onLostFocus={onLostFocus} amountRef={amountRef} addToCart={_addToCart}/>
+      <Information info={product} desc={description.shortDesc()} amount={amount} addAmount={addAmount} subtractAmount={subtractAmount} updateAmount={updateAmount} onLostFocus={onLostFocus} amountRef={amountRef} addToCart={_addToCart}/>
 
-      <BigInformation desc={product['desc']} specs={product['specs']}/>
+      {/* <BigInformation desc={product['desc']} specs={product['specs']}/> */}
+      <BigInformation desc={description.longDesc()} specs={description.specs()}/>
       <CartNotif show={notif}/>
     </div>
   )

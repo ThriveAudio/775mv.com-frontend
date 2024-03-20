@@ -47,7 +47,8 @@ export default function BigInformation({desc, specs}) {
     <div className='justify-self-center col-start-1 col-end-3 row-start-2 mt-7 mb-7 w-[1038px] border-2 border-coolgraylight rounded-lg overflow-hidden text-amber'>
       <NavBar currentInfo={currentInfo} setCurrentInfo={updateCurrentInfo}/>
       <div className='w-full p-5'>
-        <ReactMarkdown>{text}</ReactMarkdown>
+        {/* <ReactMarkdown>{text}</ReactMarkdown> */}
+        {text}
       </div>
     </div>
   )
