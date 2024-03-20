@@ -28,8 +28,9 @@
 - [x] include old password in password update form
 - [x] add phone number to checkout form
 - [x] on checkout, on confirm email, check for existing account first
-- [ ] restructure main menu
-- [ ] change product descriptions from markdown to html
+- [x] restructure main menu
+  - [x] menu icons (option to turn off text?)
+- [x] change product descriptions from markdown to html
 - [ ] pages
   - [ ] contact
   - [ ] about
@@ -37,7 +38,6 @@
   - [ ] privacy policy
 
 ### Post Launch
-- [ ] menu icons (option to turn off text?)
 - [ ] desktop & mobile friendly css
 - [ ] input field css & js
 - [ ] order edit shipping information
