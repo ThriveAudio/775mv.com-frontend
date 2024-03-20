@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="358.5mm"
+   height="425.5mm"
+   viewBox="0 0 358.5 425.5"
+   version="1.1"
+   id="svg847"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="question.svg">
+  <defs
+     id="defs841" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="-164.20504"
+     inkscape:cy="478.29203"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showborder="true"
+     inkscape:window-width="3840"
+     inkscape:window-height="2032"
+     inkscape:window-x="3424"
+     inkscape:window-y="54"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata844">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,128.5)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot815"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:64px;line-height:1.25;font-family:Hero;-inkscape-font-specification:Hero;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,0,-247.5)"><flowRegion
+         id="flowRegion817"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Hero;-inkscape-font-specification:Hero"><rect
+           id="rect819"
+           width="1092.985"
+           height="1006.1119"
+           x="-2929.4424"
+           y="-544.2002"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Hero;-inkscape-font-specification:Hero" /></flowRegion><flowPara
+         id="flowPara821"></flowPara></flowRoot>    <g
+       aria-label="?"
+       transform="matrix(3.3700965,0,0,3.3700965,9649.7722,1449.2301)"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:64px;line-height:1.25;font-family:'Qanelas Soft';-inkscape-font-specification:'Qanelas Soft';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       id="flowRoot823">
+      <path
+         d="m -2779.0595,-427.203 q 0,-7.296 -5.184,-12.096 -5.184,-4.992 -12.864,-7.296 -7.488,-2.496 -14.784,-2.496 -9.984,0 -18.816,3.648 -8.832,3.456 -11.904,11.328 -0.96,2.88 -3.456,4.416 -2.496,1.536 -5.952,1.536 -4.416,0 -7.872,-2.496 -3.456,-2.688 -3.456,-6.912 0,-1.92 0.384,-2.88 4.992,-15.168 19.392,-21.312 14.4,-6.336 31.872,-6.336 12.864,0 25.344,4.608 12.672,4.416 20.928,13.632 8.448,9.024 8.448,22.464 0,10.368 -4.416,17.088 -4.416,6.528 -10.56,10.368 -6.144,3.648 -16.512,8.064 -7.68,3.072 -11.52,5.76 -3.648,2.688 -3.648,6.912 v 3.648 q 0,4.416 -3.456,6.912 -3.456,2.496 -7.872,2.496 -4.416,0 -7.68,-2.496 -3.072,-2.496 -3.072,-6.912 v -3.84 q 0,-8.064 3.84,-13.44 3.84,-5.568 9.408,-8.832 5.568,-3.264 14.592,-7.104 9.024,-3.84 13.824,-7.488 4.8,-3.84 4.992,-10.944 z m -23.616,75.84 q 0,4.416 -3.456,6.912 -3.456,2.496 -8.256,2.496 -4.8,0 -8.64,-2.496 -3.648,-2.496 -3.648,-6.912 v -1.152 q 0,-4.608 3.456,-7.104 3.648,-2.688 8.64,-2.688 4.992,0 8.448,2.496 3.456,2.496 3.456,7.296 z"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:192px;font-family:Hero;-inkscape-font-specification:'Hero Bold';fill:#ffa019;fill-opacity:1"
+         id="path831"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+</svg>
