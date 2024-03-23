@@ -15,7 +15,8 @@ const config: Config = {
       },
     },
     fontFamily: {
-      'hero': ['Hero']
+      'hero': ['Hero'],
+      'sans': ['ui-sans-serif', 'system-ui', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji']
     },
     colors: {
       'ochre': '#D37715',
