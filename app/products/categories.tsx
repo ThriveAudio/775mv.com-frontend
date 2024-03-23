@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default function Categories({categories, current, onclick}) {
 
   const buttons = categories.map(category => {

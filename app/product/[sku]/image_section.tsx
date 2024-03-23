@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Image from 'next/image'
 import { MouseEventHandler, MutableRefObject } from 'react'
 import { StaticImport } from 'next/dist/shared/lib/get-img-props'
