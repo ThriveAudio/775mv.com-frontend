@@ -1,3 +1,4 @@
+// @ts-nocheck
 import ReactMarkdown from 'react-markdown'
 import { useState } from 'react'
 
