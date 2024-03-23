@@ -1,5 +1,4 @@
 import Bullet from '@/app/_components/bullet'
-import Bold from '@/app/_components/bold'
 import Tab from '@/app/_components/tab'
 import Row from '@/app/_components/row'
 import { Paragraph } from '@/app/_components/paragraph'
